@@ -1,0 +1,4 @@
+/*
+The parser.cpp is where all the parsing happens. 
+It is the main class that calls all the other classes.
+*/
