@@ -6,7 +6,7 @@ It is the main class that calls all the other classes.
 #include <iostream>
 #include <fstream>
 #include <regex>
-#include "Stmt.h"
+#include "Parser.h"
 using namespace std;
 
 std::vector<std::string> stmt_ops
