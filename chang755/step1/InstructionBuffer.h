@@ -7,8 +7,9 @@ class InstructionBuffer {
     public:
         InstructionBuffer();
         ~InstructionBuffer();
-    //private: 
-    // pointer to opcode objects
+    private: 
+        long instruction;
+        InstructionBuffer* next;
 };
 
 #endif
