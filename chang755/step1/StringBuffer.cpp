@@ -12,3 +12,11 @@ StringBuffer::StringBuffer(std::string str) {
 StringBuffer::~StringBuffer() {
     delete this;
 }
+
+std::string StringBuffer::getString() {
+    return this->strBuffer;
+}
+
+void StringBuffer::setString(std::string str) {
+    this->strBuffer = str;
+}
