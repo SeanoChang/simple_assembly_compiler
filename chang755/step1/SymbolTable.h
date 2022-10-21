@@ -13,7 +13,7 @@ class SymbolTable{
         static SymbolTable* getSymbol(std::string);
         static void destroySymbol();
         int idx;
-        std::map<std::string, long> definedMap();
+        static std::map<std::string, long> definedMap;
     private:
         static SymbolTable* uniqueSymbol;
         std::string symbol;

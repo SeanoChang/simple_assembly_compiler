@@ -11,7 +11,6 @@ Basically, it is the stack to store the symbols.
 SymbolTable* SymbolTable::uniqueSymbol = NULL;
 
 SymbolTable::SymbolTable() {
-    definedMap = new std::map<std::string, long>();
 	idx = 0; 
     this->symbol = "";
 }

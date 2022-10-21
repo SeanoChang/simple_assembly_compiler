@@ -20,7 +20,7 @@ class TableEntry{
         long location;
         long length;
         TableEntry* next;
-        // TableEntry* top;
+        static TableEntry* top;
 };
 
 #endif

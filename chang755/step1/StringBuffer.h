@@ -8,12 +8,12 @@ String buffer class is used to store the string from the input file.
 */
 class StringBuffer{
     public:
-        StringBuffer();
+        StringBuffer(std::string str);
         ~StringBuffer();
         std::string getString();
         void setString(std::string str);
     private:
-        std::string buffer;
+        std::string strBuffer;
 };
 
 #endif 
