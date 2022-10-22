@@ -3,13 +3,18 @@
 
 #include <iostream>
 
+/*
+We implement the instruction buffer with array of stmt pointers
+
+This class is a singleton.
+*/
 class InstructionBuffer {
     public:
-        InstructionBuffer();
         ~InstructionBuffer();
     private: 
+        // we need to the store the instruction with an array of smart unique pointers 
         long instruction;
-        InstructionBuffer* next;
+        InstructionBuffer();
 };
 
 #endif
