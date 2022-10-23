@@ -1,34 +1,33 @@
 /*
-The class for constructing the symbol table
-Basically, it is the stack to store the symbols.
+The class for constructing the symbol table.
+Symbol table is a map that maps a variable to a key that is a table entry.
 */
 
 #include <iostream>
-#include <string>
+#include <map>
 
 #include "SymbolTable.h"
 
 SymbolTable* SymbolTable::uniqueSymbol = NULL;
+std::map<std::string, TableEntry>* SymbolTable::symbolMap = NULL;
 
 SymbolTable::SymbolTable() {
-	idx = 0; 
-    this->symbol = "";
-}
-
-SymbolTable::SymbolTable(std::string symbol) {
-    this->symbol = symbol;
+    this->symbolMap = new std::map<std::string, TableEntry>();
 }
 
 SymbolTable::~SymbolTable() {
+    delete symbolMap;
     delete uniqueSymbol;
 }
 
-SymbolTable* SymbolTable::getSymbol(std::string symbol) {
+SymbolTable* SymbolTable::getSymbolTable() {
     if (uniqueSymbol == NULL) {
-        uniqueSymbol = new SymbolTable(symbol);
+        uniqueSymbol = new SymbolTable();
     }
     return uniqueSymbol;
 }
 
-
+void SymbolTable::addToSymbolMap(std::string symbol, TableEntry entry) {
+    (*symbolMap)[symbol] = entry;
+}
 

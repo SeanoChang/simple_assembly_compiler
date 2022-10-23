@@ -49,30 +49,7 @@ static const std::vector<std::string> label_stmt_ops
   "gosub"
 };
 
-int main(int argc, char **argv) {
-    string f_string = argv[1];
 
-    fstream f;
-    string line;
-    f.open(f_string);
-
-    if(f.is_open()){
-        while(getline(f, line)){
-            // add all parsed instructions to pre-instruction list first, checking input, etc
-            // check if the line is a instruction from the list above.
-
-        }
-        // for each item in pre instruction list
-        // then go through instruction list and add stuff to symbol table, statement buffer, etc
-        // do stuff like assign addresses,
-        // check if var has been defined twice
-        // add set total num of vars to start
-        // etc
-        f.close();
-    }
-    else cout << "Error while opening input file";
-    return 0;
-}
 
 // reading input file 
 

@@ -8,7 +8,6 @@ Basically, it is the stack to store the op instructions.
 
 InstructionBuffer::InstructionBuffer() {
     this->instruction = 0;
-    this->next = NULL;
 }
 
 InstructionBuffer::~InstructionBuffer() {

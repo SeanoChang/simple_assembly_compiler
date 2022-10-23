@@ -8,17 +8,18 @@
 The SymbolTable class is a singleton class.
 It is used to store the symbol for the entry table.
 */
+#include <string>
+#include <map>
+#include "TableEntry.h"
+
 class SymbolTable{
     public:
-        static SymbolTable* getSymbol(std::string);
-        static void destroySymbol();
-        int idx;
-        static std::map<std::string, long> definedMap;
+        static SymbolTable* getSymbolTable();
+        void addToSymbolMap(std::string symbol, TableEntry entry);   
     private:
         static SymbolTable* uniqueSymbol;
-        std::string symbol;
+        static std::map<std::string, TableEntry>* symbolMap;
         SymbolTable();
-        SymbolTable(std::string);
         ~SymbolTable();
 }; 
 

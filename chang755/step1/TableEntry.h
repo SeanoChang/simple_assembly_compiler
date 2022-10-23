@@ -11,16 +11,12 @@ use to push to add new entry and pop to remove the entry.
 class TableEntry{
     public:
         TableEntry();
+        TableEntry(std::string symbol, long location, long length);
         ~TableEntry();
-        void deleteTableEntry();
-        void push(std::string symbol, int location, int length);
-        void pop();
     private:
         std::string symbol;
         long location;
         long length;
-        TableEntry* next;
-        static TableEntry* top;
 };
 
 #endif
