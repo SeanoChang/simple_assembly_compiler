@@ -2,18 +2,21 @@
 #define STRINGBUFFER_H
 #include <iostream>
 #include <string>
+#include <vector>
 
 /*
 String buffer class is used to store the string from the input file.
 */
 class StringBuffer{
     public:
-        StringBuffer(std::string str);
-        ~StringBuffer();
+        static StringBuffer* getStringBuffer();
+        ~StringBuffer() {};
         std::string getString();
-        void setString(std::string str);
+        void addString(std::string str);
     private:
-        std::string strBuffer;
+        static StringBuffer* uniqueStrBuffer;
+        static std::vector<std::string> strBuffer;
+        StringBuffer() {};
 };
 
 #endif 
