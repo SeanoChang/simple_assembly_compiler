@@ -2,6 +2,9 @@
 #include "Stmt.h"
 using namespace std;
 
+/* Stmt pure virtual destructor */
+Stmt::~Stmt() {}
+
 /* op jump */
 const int Opjump::opcode = OP_JUMP;
 const std::string Opjump::operation= "Jump";
@@ -268,12 +271,73 @@ std::string Opprints::getOperation(){
 
 /* op printtos */
 const int Opprinttos::opcode = OP_PRINTTOS;
-const std::string Opprinttos::operation= "Printos";
+const std::string Opprinttos::operation= "Printtos";
 
 int Opprinttos::getOpcode(){
     return opcode;  
 }
 
 std::string Opprinttos::getOperation(){
+    return operation;
+}
+
+
+/* op end program */
+const int Opendprogram::opcode = 0;
+const std::string Opendprogram::operation= "End";
+
+int Opendprogram::getOpcode(){
+    return opcode;  
+}
+
+std::string Opendprogram::getOperation(){
+    return operation;
+}
+
+/* Opdeclarray */ 
+const int Opdeclarray::opcode = 0;
+const std::string Opdeclarray::operation= "DeclArray";
+
+int Opdeclarray::getOpcode(){
+    return opcode;  
+}
+
+std::string Opdeclarray::getOperation(){
+    return operation;
+}
+
+/* Opdeclscalar */
+const int Opdeclscalar::opcode = 0;
+const std::string Opdeclscalar::operation= "DeclScalar";
+
+int Opdeclscalar::getOpcode(){
+    return opcode;  
+}
+
+std::string Opdeclscalar::getOperation(){
+    return operation;
+}
+
+/* Oplabel */
+const int Oplabel::opcode = 0;
+const std::string Oplabel::operation= "Label";
+
+int Oplabel::getOpcode(){
+    return opcode;  
+}
+
+std::string Oplabel::getOperation(){
+    return operation;
+}
+
+/* Opgosublabel */
+const int Opgosublabel::opcode = 0;
+const std::string Opgosublabel::operation= "GoSubLabel";
+
+int Opgosublabel::getOpcode(){
+    return opcode;  
+}
+
+std::string Opgosublabel::getOperation(){
     return operation;
 }

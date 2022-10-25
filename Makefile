@@ -10,6 +10,8 @@ OBJS2 =
 HOBJS2 =
 TESTS = $(wildcard testcases/*)
 
+VALGRIND = valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose
+
 all: clean step1 step2 
 
 .PHONY: test1

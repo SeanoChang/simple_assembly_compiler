@@ -15,7 +15,7 @@ It is used to store the symbol for the entry table.
 class SymbolTable{
     public:
         static SymbolTable* getSymbolTable();
-        void addToSymbolMap(std::string symbol, TableEntry entry);
+        void addToSymbolTable(std::string symbol, TableEntry entry);
         TableEntry getTableEntry(std::string symbol); 
     private:
         static SymbolTable* uniqueSymbol;

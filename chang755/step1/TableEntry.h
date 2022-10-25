@@ -12,7 +12,7 @@ class TableEntry{
     public:
         TableEntry();
         TableEntry(std::string symbol, long location, long length);
-        ~TableEntry();
+        ~TableEntry() {};
     private:
         std::string symbol;
         long location;

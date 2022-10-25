@@ -15,15 +15,15 @@ This class is a singleton.
 class InstructionBuffer: public Instruction<Stmt*> {
     public:
         static InstructionBuffer* getInstructionBuffer();
-        static std::vector<std::unique_ptr<Instruction<Stmt*>>> instBuffer;
+        void initializeInstBuffer();
         ~InstructionBuffer() {};
         void addToInstructionBuffer(Stmt* stmt);
-        void addToInstructionBuffer(Stmt* stmt, std::string var);
-        void addToInstructionBuffer(Stmt* stmt, std::string var1, std::string var2);
+        void printInstructionBuffer();
     private: 
         // we need to the store the instruction with an array of smart unique pointers 
         static InstructionBuffer* uniqueInst;
-        InstructionBuffer() {};
+        static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer;
+        InstructionBuffer();
 };
 
 #endif

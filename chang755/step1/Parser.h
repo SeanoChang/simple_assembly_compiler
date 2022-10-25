@@ -8,6 +8,7 @@ It is the main class that calls all the other classes.
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Stmt.h"
 
 static const std::vector<std::string> stmt_ops = { 
   "start",
@@ -53,6 +54,7 @@ static const std::vector<std::vector<std::string>> stmt_ops_list = {
   varLen_stmt_ops,
   label_stmt_ops
 };
+
 class Parser {
     public:
         Parser() {};
@@ -60,9 +62,6 @@ class Parser {
         void parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream& outfile2);
     private:
         Stmt* createInstruction(std::string op);
-        int addToInstructionBuffer(std::string op);
-        int addToInstructionBuffer(std::string op, std::string var);
-        int addToInstructionBuffer(std::string op, std::string var1, std::string var2);
 };  
 
 #endif /* PARSER_H_ */

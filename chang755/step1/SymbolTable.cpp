@@ -27,7 +27,7 @@ SymbolTable* SymbolTable::getSymbolTable() {
     return uniqueSymbol;
 }
 
-void SymbolTable::addToSymbolMap(std::string symbol, TableEntry entry) {
+void SymbolTable::addToSymbolTable(std::string symbol, TableEntry entry) {
     (*symbolMap)[symbol] = entry;
 }
 

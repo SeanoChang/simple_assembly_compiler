@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "TakeInputBehavior.h"
 
 // list of static const int opcodes....
 static const int OP_JUMP = 0x00000010;
@@ -33,7 +34,6 @@ class Stmt{
     public:
         virtual int getOpcode() = 0;
         virtual std::string getOperation() = 0;
-        Stmt() {};
         virtual ~Stmt() = 0;
 };
 
@@ -44,6 +44,11 @@ class Opjump: public Stmt
         ~Opjump() {};
         int getOpcode();
         std::string getOperation();
+        virtual void setInputRequired(TakeInputBehavior*);
+
+    protected:
+        TakeInputBehavior* takeInputBehavior;
+
     private:
         static const int opcode;
         static const std::string operation;
@@ -306,6 +311,66 @@ class Opprinttos: public Stmt
     public: 
         Opprinttos() {};
         ~Opprinttos() {};
+        int getOpcode();
+        std::string getOperation();
+    private:
+        static const int opcode;
+        static const std::string operation;
+};
+
+class Opendprogram: public Stmt
+{   
+    public: 
+        Opendprogram() {};
+        ~Opendprogram() {};
+        int getOpcode();
+        std::string getOperation();
+    private:
+        static const int opcode;
+        static const std::string operation;
+};
+
+class Opdeclarray: public Stmt
+{   
+    public: 
+        Opdeclarray() {};
+        ~Opdeclarray() {};
+        int getOpcode();
+        std::string getOperation();
+    private:
+        static const int opcode;
+        static const std::string operation;
+};
+
+class Opdeclscalar: public Stmt
+{   
+    public: 
+        Opdeclscalar() {};
+        ~Opdeclscalar() {};
+        int getOpcode();
+        std::string getOperation();
+    private:
+        static const int opcode;
+        static const std::string operation;
+};
+
+class Oplabel: public Stmt
+{   
+    public: 
+        Oplabel() {};
+        ~Oplabel() {};
+        int getOpcode();
+        std::string getOperation();
+    private:
+        static const int opcode;
+        static const std::string operation;
+};
+
+class Opgosublabel: public Stmt
+{   
+    public: 
+        Opgosublabel() {};
+        ~Opgosublabel() {};
         int getOpcode();
         std::string getOperation();
     private:

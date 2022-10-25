@@ -44,146 +44,163 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
     int num_groups = sm3.size() == 0 ? (sm2.size() == 0 ? sm1.size() : sm2.size()) : sm3.size();
 
 
+    // initialize the variables used in the switch statement
+    std::string var1;
+    std::string var2;
     Stmt* validStmt = NULL;
+
     switch(num_groups){
       case 2: // case for only operation
-        std::cout << "input: " << sm1[0] << std::endl;
         validStmt = createInstruction(sm1[1]);
+        std::cout << sm1[1] << std::endl;
         if(validStmt == NULL){
           std::cout << "invalid operation" << std::endl;
           return;
         } 
         // if the operation is valid, then add it to the instruction buffer.
-        ibuf->addInstruction((Instruction*)validStmt);
+        ibuf->addToInstructionBuffer(validStmt);
+        std::cout << validStmt->getOperation() << std::endl;
 
         break;
       case 3: // case for one operation and one variable/string
-        std::cout << "input: " << sm2[0] << std::endl;
         validStmt = createInstruction(sm2[1]);
+        std::cout << sm2[1] << std::endl;
         if(validStmt == NULL){
           std::cout << "invalid operation" << std::endl;
           return;
         } 
-        
-      
+        ibuf->addToInstructionBuffer(validStmt);
+        var1 = sm2[2];
+
+        std::cout << validStmt->getOperation() << std::endl;
         break;
       case 4: // case for one operation and two varibles/strings
-        std::cout << "input: " << sm3[0] << std::endl;
         validStmt = createInstruction(sm3[1]);
+        std::cout << sm3[1]<< std::endl;
         if(validStmt == NULL){
           std::cout << "invalid operation" << std::endl;
           return;
         } 
-        
+        ibuf->addToInstructionBuffer(validStmt);
+        var1 = sm3[2];
+        var2 = sm3[3];
+
+
+
+        std::cout << validStmt->getOperation() << std::endl;
         break;
       default:
         break;
     }
   }
+  std::cout << "=====================" << std::endl;
+  ibuf->printInstructionBuffer();
 }
 
 /* checking if the operation is valid and return the type of vector it belongs too */
 Stmt* Parser::createInstruction(std::string op) {
   // if the op is a valid operation, then create the stmt object
-  if(op.compare("start")){
+  if(op.compare("start") == 0){
     Stmt* stmt = new Opstartprogram();
     return stmt;
   } 
-  if(op.compare("end")){
+  if(op.compare("end") == 0){
     Stmt* stmt = new Opendprogram();
     return stmt;
   }
-  if(op.compare("exit")){
-    Stmt* stmt = new Opexit();
+  if(op.compare("exit") == 0){
+    Stmt* stmt = new Opexitprogram();
     return stmt;
   }
-  if(op.compare("return")){
+  if(op.compare("return") == 0){
     Stmt* stmt = new Opreturn();
     return stmt;
   }
-  if(op.compare("pop")){
+  if(op.compare("pop") == 0){
     Stmt* stmt = new Oppop();
     return stmt;
   }
-  if(op.compare("dup")){
+  if(op.compare("dup") == 0){
     Stmt* stmt = new Opdup();
     return stmt;
   }
-  if(op.compare("swap")){
-    Stmt* stmt = new Oppush();
+  if(op.compare("swap") == 0){
+    Stmt* stmt = new Opswap();
     return stmt;
   }
-  if(op.compare("add")){
+  if(op.compare("add") == 0){
     Stmt* stmt = new Opadd();
     return stmt;
   }
-  if(op.compare("negate")){
+  if(op.compare("negate") == 0){
     Stmt* stmt = new Opnegate();
     return stmt;
   }
-  if(op.compare("mul")){
+  if(op.compare("mul") == 0){
     Stmt* stmt = new Opmul();
     return stmt;
   }
-  if(op.compare("div")){
+  if(op.compare("div") == 0){
     Stmt* stmt = new Opdiv();
     return stmt;
   }
-  if(op.compare("printtos")){
+  if(op.compare("printtos") == 0){
     Stmt* stmt = new Opprinttos();
     return stmt;
   }
-  if(op.compare("prints")){
+  if(op.compare("prints") == 0){
     Stmt* stmt = new Opprints();
     return stmt;
   }
-  if(op.compare("declscal")){
-    Stmt* stmt = new Opdeclscal();
+  if(op.compare("declscal") == 0){
+    Stmt* stmt = new Opdeclscalar();
     return stmt;
   }
-  if(op.compare("pushscal")){
-    Stmt* stmt = new Oppushscal();
+  if(op.compare("pushscal") == 0){
+    Stmt* stmt = new Oppushscalar();
     return stmt;
   }
-  if(op.compare("pusharr")){
-    Stmt* stmt = new Oppusharr();
-  }
-  if(op.compare("popscal")){
-    Stmt* stmt = new Oppopscal();
+  if(op.compare("pusharr") == 0){
+    Stmt* stmt = new Oppusharray();
     return stmt;
   }
-  if(op.compare("poparr")){
-    Stmt* stmt = new Oppoparr();
+  if(op.compare("popscal") == 0){
+    Stmt* stmt = new Oppopscalar();
     return stmt;
   }
-  if(op.compare("pushi")){
+  if(op.compare("poparr") == 0){
+    Stmt* stmt = new Oppoparray();
+    return stmt;
+  }
+  if(op.compare("pushi") == 0){
     Stmt* stmt = new Oppushi();
     return stmt;
   }
-  if(op.compare("declarr")){
-    Stmt* stmt = new Opdeclarr();
+  if(op.compare("declarr") == 0){
+    Stmt* stmt = new Opdeclarray();
     return stmt;
   }
-  if(op.compare("label")){
+  if(op.compare("label") == 0){
     Stmt* stmt = new Oplabel();
+    return stmt;
   }
-  if(op.compare("gosublabel")){
+  if(op.compare("gosublabel") == 0){
     Stmt* stmt = new Opgosublabel();
     return stmt;
   }
-  if(op.compare("jump")){
+  if(op.compare("jump") == 0){
     Stmt* stmt = new Opjump();
     return stmt;
   } 
-  if(op.compare("jumpzero")){
+  if(op.compare("jumpzero") == 0){
     Stmt* stmt = new Opjumpzero();
     return stmt;
   }
-  if(op.compare("jumpnzero")){
+  if(op.compare("jumpnzero") == 0){
     Stmt* stmt = new Opjumpnzero();
     return stmt;
   }
-  if(op.compare("gosub")){
+  if(op.compare("gosub") == 0){
     Stmt* stmt = new Opgosub();
     return stmt;
   }

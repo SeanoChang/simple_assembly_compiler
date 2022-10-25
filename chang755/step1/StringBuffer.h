@@ -10,13 +10,13 @@ String buffer class is used to store the string from the input file.
 class StringBuffer{
     public:
         static StringBuffer* getStringBuffer();
-        ~StringBuffer() {};
+        ~StringBuffer();
         std::string getString();
         void addString(std::string str);
     private:
         static StringBuffer* uniqueStrBuffer;
         static std::vector<std::string> strBuffer;
-        StringBuffer() {};
+        StringBuffer();
 };
 
 #endif 

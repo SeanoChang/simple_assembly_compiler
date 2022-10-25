@@ -14,7 +14,3 @@ TableEntry::TableEntry(std::string symbol, long location, long length){
     this->length = length;
 }
 
-/* destructor */
-TableEntry::~TableEntry(){
-    delete this;
-}
