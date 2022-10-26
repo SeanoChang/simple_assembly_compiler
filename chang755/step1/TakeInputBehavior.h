@@ -1,39 +1,99 @@
-#ifndef INPUTREQUIRED_H_
-#define INPUTREQUIRED_H_
+#ifndef TAKEINPUTBEHAVIOR_H_
+#define TAKEINPUTBEHAVIOR_H_
+
+#include <iostream>
+#include "TableEntry.h"
+#include "SymbolTable.h"
+#include "StringBuffer.h"
 
 class TakeInputBehavior {
 public:
-   virtual void push( ) = 0;
+   virtual int addToBuffer() = 0;
+   virtual int addToBuffer(std::string str) = 0;
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) = 0;
+   virtual int addToBuffer(std::string str, SymbolTable* sTable) = 0;
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) = 0;
+   virtual ~TakeInputBehavior() = 0;
 };
 
 class stmt_ops : public TakeInputBehavior {
 public:
-   void push( );
+   virtual int addToBuffer() ;
+   virtual int addToBuffer(std::string str) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string str, SymbolTable* sTable) {return 0;};
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~stmt_ops() {};
+};
+
+class print_ops : public TakeInputBehavior {
+public:
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string str) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer);
+   virtual int addToBuffer(std::string str, SymbolTable* sTable) {return 0;};
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~print_ops() {};
 };
 
 class var_stmt_ops : public TakeInputBehavior {
 public:
-   void push( );
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string str) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string var, SymbolTable* sTable);
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~var_stmt_ops() {};
 };
 
 class int_stmt_ops : public TakeInputBehavior {
 public:
-   void push( );
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string str);
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string var, SymbolTable* sTable){return 0;};
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~int_stmt_ops() {};
 };
 
-class varLen_stmt_ops : public TakeInputBehavior {
+class declscal_stmt_ops: public TakeInputBehavior {
 public:
-   void push( );
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string str) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string symbol, SymbolTable* sTable);
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~declscal_stmt_ops() {};
+};
+
+class declarr_stmt_ops : public TakeInputBehavior {
+public:
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string str) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string symbol, SymbolTable* sTable) {return 0;};
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable);
+   virtual ~declarr_stmt_ops() {};
+};
+
+class decllabel_stmt_ops : public TakeInputBehavior {
+public:
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string str) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string symbol, SymbolTable* sTable);
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~decllabel_stmt_ops() {};
 };
 
 class label_stmt_ops : public TakeInputBehavior {
 public:
-   void push( );
+   virtual int addToBuffer() { return 0; };
+   virtual int addToBuffer(std::string symbol) {return 0;};
+   virtual int addToBuffer(std::string str, StringBuffer* strBuffer) {return 0;};
+   virtual int addToBuffer(std::string symbol, SymbolTable* sTable);
+   virtual int addToBuffer(std::string var, std::string var2, SymbolTable* sTable) {return 0;};
+   virtual ~label_stmt_ops() {};
 };
 
-class stmt_ops_list : public TakeInputBehavior {
-public:
-   void push( );
-};
-
-#endif /* INPUTREQUIRED_H_ */
+#endif /* TAKEINPUTBEHAVIOR_H_ */

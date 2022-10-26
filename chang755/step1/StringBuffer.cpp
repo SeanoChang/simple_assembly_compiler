@@ -26,16 +26,16 @@ StringBuffer* StringBuffer::getStringBuffer(){
 }
 
 /* get the string */
-std::string StringBuffer::getString() {
-    std::string rtv = strBuffer.back();
-    strBuffer.pop_back();
-    return rtv;
+std::string StringBuffer::getString(int index) {
+    return strBuffer[index];
 }
 
-/* add the string to the buffer */
-void StringBuffer::addString(std::string str) {
+/* add the string to the buffer and return the position added in the buffer*/
+int StringBuffer::addString(std::string str) {
     if(strBuffer.size() == strBuffer.capacity()){ // if the buffer is full double the size
         strBuffer.reserve(strBuffer.capacity() * 2);
     }
     strBuffer.push_back(str);
+
+    return strBuffer.size() - 1;
 }

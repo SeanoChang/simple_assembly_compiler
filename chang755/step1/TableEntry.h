@@ -11,8 +11,10 @@ use to push to add new entry and pop to remove the entry.
 class TableEntry{
     public:
         TableEntry();
-        TableEntry(std::string symbol, long location, long length);
+        TableEntry(long location, long length);
         ~TableEntry() {};
+        int getLocation() const;
+        int getLength() const;
     private:
         std::string symbol;
         long location;

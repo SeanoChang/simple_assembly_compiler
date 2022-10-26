@@ -8,9 +8,15 @@
 TableEntry::TableEntry() {
 }
 
-TableEntry::TableEntry(std::string symbol, long location, long length){
-    this->symbol = symbol;
-    this->location = location;
-    this->length = length;
+TableEntry::TableEntry(long _location, long _length){
+    location = _location;
+    length = _length;
 }
 
+int TableEntry::getLocation() const {
+    return location;
+}
+
+int TableEntry::getLength() const {
+    return length;
+}

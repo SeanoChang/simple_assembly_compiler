@@ -21,12 +21,28 @@ InstructionBuffer* InstructionBuffer::getInstructionBuffer() {
     return uniqueInst;
 }
 
-void InstructionBuffer::addToInstructionBuffer(Stmt* stmt){
-    if(stmt->getOpcode() != 0) instBuffer.push_back(make_unique<Instruction<Stmt>>(stmt));
+void InstructionBuffer::addToInstructionBuffer(Stmt* stmt, int loc, std::string label) {
+    if(stmt->getOpcode() != 0) {
+        std::cout << "Adding instruction to instruction buffer " << stmt->getOperation() << " " << loc << std::endl;
+        if(instBuffer.size() == instBuffer.capacity()){
+            instBuffer.reserve(instBuffer.capacity() * 2);
+        }
+        instBuffer.push_back(make_unique<Instruction<Stmt>>(stmt, loc, label));
+    }
 }
 
-void InstructionBuffer::printInstructionBuffer(){
-    for (auto& inst : instBuffer) {
-        std::cout << inst->getInstruction() << std::endl;
+int InstructionBuffer::getInstructionBufferSize() const {
+    return instBuffer.size();
+}
+
+void InstructionBuffer::printInstructionBuffer() const {
+    for (auto& inst: instBuffer) {
+        if(inst->getInstructionState() >= 0){
+            if(inst->getInstruction() == "Prints"){
+                std::cout << inst->getInstruction() << " " << inst->getLabel() << std::endl;
+            }
+            std::cout << inst->getInstruction() << " " << inst->getInstructionState() <<std::endl;
+        }
     }
+    std::cout << std::endl;
 }

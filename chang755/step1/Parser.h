@@ -9,8 +9,9 @@ It is the main class that calls all the other classes.
 #include <string>
 #include <vector>
 #include "Stmt.h"
+#include "InstructionBuffer.h"
 
-static const std::vector<std::string> stmt_ops = { 
+static const std::vector<std::string> stmt_ops = { //ib
   "start",
   "end",
   "exit",
@@ -21,37 +22,46 @@ static const std::vector<std::string> stmt_ops = {
   "add",
   "negate",
   "mul",
-  "div",
   "printtos",
+  "div"                        
+};
+
+static const std::vector<std::string> print_ops = { //string buffer 
   "prints"                          
 };
 
-static const std::vector<std::string> var_stmt_ops = {
-  "declscal",
+static const std::vector<std::string> var_stmt_ops = { //ib
   "pushscal",
   "pusharr",
   "popscal",
   "poparr"
 };
 
-static const std::vector<std::string> int_stmt_ops = {"pushi"};
+static const std::vector<std::string> int_stmt_ops = {"pushi"}; //ib
 
-static const std::vector<std::string> varLen_stmt_ops = {"declarr"};
+static const std::vector<std::string> declscal_stmt_ops = {"declscal"}; //st
 
-static const std::vector<std::string> label_stmt_ops ={
+static const std::vector<std::string> declarr_stmt_ops = {"declarr"}; //st
+
+static const std::vector<std::string> decllabel_stmt_ops = {
   "label",
-  "gosublabel",
+  "gosublabel"
+}; //ib
+
+static const std::vector<std::string> label_stmt_ops ={ //st
   "jump",
   "jumpzero",
   "jumpnzero",
   "gosub"
 };
 
-static const std::vector<std::vector<std::string>> stmt_ops_list = {
+static const std::vector<std::vector<std::string>> stmt_ops_list = { //??
   stmt_ops,
   var_stmt_ops,
   int_stmt_ops,
-  varLen_stmt_ops,
+  declscal_stmt_ops,
+  declarr_stmt_ops,
+  decllabel_stmt_ops,
   label_stmt_ops
 };
 
@@ -62,6 +72,7 @@ class Parser {
         void parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream& outfile2);
     private:
         Stmt* createInstruction(std::string op);
+        int writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf);
 };  
 
 #endif /* PARSER_H_ */

@@ -31,24 +31,29 @@ static const int OP_PRINTS = 0x00000060;
 static const int OP_PRINTTOS = 0x00000061;
 
 class Stmt{
-    public:
-        virtual int getOpcode() = 0;
-        virtual std::string getOperation() = 0;
-        virtual ~Stmt() = 0;
+public:
+    Stmt() {};
+    virtual int getOpcode() = 0;
+    virtual std::string getOperation() = 0;
+    virtual ~Stmt() = 0;
+    virtual void setTakeInputBehavior(TakeInputBehavior* takeInputBehavior);
+    virtual int takeInput(std::string input);
+    virtual int takeInput(std::string input, StringBuffer* stringBuffer);
+    virtual int takeInput(std::string input, SymbolTable* symbolTable);
+    virtual int takeInput(std::string input1, std::string input2, SymbolTable* symbolTable);
+protected: 
+    int locationInBuffer;
+    TakeInputBehavior* takeInputBehavior;
 };
 
 class Opjump: public Stmt
 {   
     public: 
-        Opjump() {};
+        Opjump();
         ~Opjump() {};
         int getOpcode();
         std::string getOperation();
-        virtual void setInputRequired(TakeInputBehavior*);
-
-    protected:
-        TakeInputBehavior* takeInputBehavior;
-
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -57,10 +62,11 @@ class Opjump: public Stmt
 class Opjumpzero: public Stmt
 {   
     public: 
-        Opjumpzero() {};
+        Opjumpzero();
         ~Opjumpzero() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -69,10 +75,11 @@ class Opjumpzero: public Stmt
 class Opjumpnzero: public Stmt
 {   
     public: 
-        Opjumpnzero() {};
+        Opjumpnzero();
         ~Opjumpnzero() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -81,10 +88,11 @@ class Opjumpnzero: public Stmt
 class Opgosub: public Stmt
 {   
     public: 
-        Opgosub() {};
+        Opgosub();
         ~Opgosub() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -93,10 +101,11 @@ class Opgosub: public Stmt
 class Opreturn: public Stmt
 {   
     public: 
-        Opreturn() {};
+        Opreturn();
         ~Opreturn() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -105,10 +114,11 @@ class Opreturn: public Stmt
 class Opentersubroutine: public Stmt
 {   
     public: 
-        Opentersubroutine() {};
+        Opentersubroutine();
         ~Opentersubroutine() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -117,10 +127,11 @@ class Opentersubroutine: public Stmt
 class Opexitsubroutine: public Stmt
 {   
     public: 
-        Opexitsubroutine() {};
+        Opexitsubroutine() ;
         ~Opexitsubroutine() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -129,10 +140,11 @@ class Opexitsubroutine: public Stmt
 class Opstartprogram: public Stmt
 {   
     public: 
-        Opstartprogram() {};
+        Opstartprogram() ;
         ~Opstartprogram() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -141,10 +153,11 @@ class Opstartprogram: public Stmt
 class Opexitprogram: public Stmt
 {   
     public: 
-        Opexitprogram() {};
+        Opexitprogram() ;
         ~Opexitprogram() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -153,10 +166,11 @@ class Opexitprogram: public Stmt
 class Oppushscalar: public Stmt
 {   
     public: 
-        Oppushscalar() {};
+        Oppushscalar() ;
         ~Oppushscalar() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -165,10 +179,11 @@ class Oppushscalar: public Stmt
 class Oppusharray: public Stmt
 {   
     public: 
-        Oppusharray() {};
+        Oppusharray() ;
         ~Oppusharray() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -177,10 +192,11 @@ class Oppusharray: public Stmt
 class Oppushi: public Stmt
 {   
     public: 
-        Oppushi() {};
+        Oppushi() ;
         ~Oppushi() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -189,10 +205,11 @@ class Oppushi: public Stmt
 class Oppopscalar: public Stmt
 {   
     public: 
-        Oppopscalar() {};
+        Oppopscalar() ;
         ~Oppopscalar() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -201,10 +218,11 @@ class Oppopscalar: public Stmt
 class Oppoparray: public Stmt
 {   
     public: 
-        Oppoparray() {};
+        Oppoparray() ;
         ~Oppoparray() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -213,10 +231,11 @@ class Oppoparray: public Stmt
 class Oppop: public Stmt
 {   
     public: 
-        Oppop() {};
+        Oppop() ;
         ~Oppop() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -225,10 +244,11 @@ class Oppop: public Stmt
 class Opdup: public Stmt
 {   
     public: 
-        Opdup() {};
+        Opdup() ;
         ~Opdup() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -237,10 +257,11 @@ class Opdup: public Stmt
 class Opswap: public Stmt
 {   
     public: 
-        Opswap() {};
+        Opswap() ;
         ~Opswap() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -249,10 +270,11 @@ class Opswap: public Stmt
 class Opadd: public Stmt
 {   
     public: 
-        Opadd() {};
+        Opadd() ;
         ~Opadd() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -261,10 +283,11 @@ class Opadd: public Stmt
 class Opnegate: public Stmt
 {   
     public: 
-        Opnegate() {};
+        Opnegate() ;
         ~Opnegate() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -273,10 +296,11 @@ class Opnegate: public Stmt
 class Opmul: public Stmt
 {   
     public: 
-        Opmul() {};
+        Opmul() ;
         ~Opmul() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -285,10 +309,11 @@ class Opmul: public Stmt
 class Opdiv: public Stmt
 {   
     public: 
-        Opdiv() {};
+        Opdiv() ;
         ~Opdiv() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -297,10 +322,11 @@ class Opdiv: public Stmt
 class Opprints: public Stmt
 {   
     public: 
-        Opprints() {};
+        Opprints() ;
         ~Opprints() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -309,10 +335,11 @@ class Opprints: public Stmt
 class Opprinttos: public Stmt
 {   
     public: 
-        Opprinttos() {};
+        Opprinttos() ;
         ~Opprinttos() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -321,10 +348,11 @@ class Opprinttos: public Stmt
 class Opendprogram: public Stmt
 {   
     public: 
-        Opendprogram() {};
+        Opendprogram() ;
         ~Opendprogram() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -333,10 +361,11 @@ class Opendprogram: public Stmt
 class Opdeclarray: public Stmt
 {   
     public: 
-        Opdeclarray() {};
+        Opdeclarray() ;
         ~Opdeclarray() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -345,10 +374,11 @@ class Opdeclarray: public Stmt
 class Opdeclscalar: public Stmt
 {   
     public: 
-        Opdeclscalar() {};
+        Opdeclscalar() ;
         ~Opdeclscalar() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -357,10 +387,11 @@ class Opdeclscalar: public Stmt
 class Oplabel: public Stmt
 {   
     public: 
-        Oplabel() {};
+        Oplabel() ;
         ~Oplabel() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;
@@ -369,10 +400,11 @@ class Oplabel: public Stmt
 class Opgosublabel: public Stmt
 {   
     public: 
-        Opgosublabel() {};
+        Opgosublabel() ;
         ~Opgosublabel() {};
         int getOpcode();
         std::string getOperation();
+        
     private:
         static const int opcode;
         static const std::string operation;

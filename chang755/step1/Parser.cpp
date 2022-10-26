@@ -6,12 +6,13 @@ It is the main class that calls all the other classes.
 #include <fstream>
 #include <regex>
 #include "Parser.h"
+#include "TakeInputBehavior.h"
 #include "Stmt.h"
 #include "SymbolTable.h"
 #include "StringBuffer.h"
 #include "TableEntry.h"
 #include "Instruction.h"
-#include "InstructionBuffer.h"
+
 using namespace std;
 
 void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream& outfile2){
@@ -48,6 +49,8 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
     std::string var1;
     std::string var2;
     Stmt* validStmt = NULL;
+    std::string instruction = "";
+    int loc = 0;
 
     switch(num_groups){
       case 2: // case for only operation
@@ -58,8 +61,7 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
           return;
         } 
         // if the operation is valid, then add it to the instruction buffer.
-        ibuf->addToInstructionBuffer(validStmt);
-        std::cout << validStmt->getOperation() << std::endl;
+        ibuf->addToInstructionBuffer(validStmt, -1, "");
 
         break;
       case 3: // case for one operation and one variable/string
@@ -69,10 +71,25 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
           std::cout << "invalid operation" << std::endl;
           return;
         } 
-        ibuf->addToInstructionBuffer(validStmt);
         var1 = sm2[2];
+        instruction = sm2[1];
 
-        std::cout << validStmt->getOperation() << std::endl;
+        if(std::count(print_ops.begin(), print_ops.end(), instruction)) {
+          loc = validStmt->takeInput(var1, sbuf);
+        } else if (std::count(int_stmt_ops.begin(), int_stmt_ops.end(), instruction)) {
+          loc = validStmt->takeInput(var1);
+        } else if(std::count(var_stmt_ops.begin(), var_stmt_ops.end(), instruction)) {
+          loc = validStmt->takeInput(var1, symtab);
+        } else if(std::count(declscal_stmt_ops.begin(), declscal_stmt_ops.end(), instruction)) {
+          loc = validStmt->takeInput(var1, symtab);
+        } else if(std::count(decllabel_stmt_ops.begin(), decllabel_stmt_ops.end(), instruction)) {
+          loc = validStmt->takeInput(var1, symtab);
+        } else if(std::count(label_stmt_ops.begin(), label_stmt_ops.end(), instruction)) {
+          loc = validStmt->takeInput(var1, symtab);
+        }
+
+
+        ibuf->addToInstructionBuffer(validStmt, loc, var1);
         break;
       case 4: // case for one operation and two varibles/strings
         validStmt = createInstruction(sm3[1]);
@@ -81,19 +98,31 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
           std::cout << "invalid operation" << std::endl;
           return;
         } 
-        ibuf->addToInstructionBuffer(validStmt);
         var1 = sm3[2];
         var2 = sm3[3];
-
-
-
-        std::cout << validStmt->getOperation() << std::endl;
+        loc = validStmt->takeInput(var1, var2, symtab);
+        ibuf->addToInstructionBuffer(validStmt, loc, var1);
         break;
       default:
         break;
     }
   }
   std::cout << "=====================" << std::endl;
+  ibuf->printInstructionBuffer();
+
+  for(auto& inst: ibuf->instBuffer){
+    if(inst->getInstructionState() == -1){ // if the instruction is not patched up
+      std::string tempLabel = inst->getLabel();
+      if(tempLabel != ""){
+        int loc = symtab->getSymbolTableLocation(tempLabel);
+        inst->setInstructionState(loc);
+      } else {
+        int loc = symtab->getSymbolTableLength();
+        inst->setInstructionState(loc);
+      }
+    }
+  }
+
   ibuf->printInstructionBuffer();
 }
 
@@ -209,3 +238,11 @@ Stmt* Parser::createInstruction(std::string op) {
 }
 
 // write output file
+int Parser::writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf){
+  for(auto& inst: ibuf->instBuffer){
+    outfile1 << inst->getInstruction() << " " << inst->getInstructionState() << std::endl;
+    outfile2 << inst->getInstruction() << " " << inst->getInstructionState()<< std::endl;
+  }
+  return 0;
+}
+

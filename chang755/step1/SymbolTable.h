@@ -10,18 +10,21 @@ It is used to store the symbol for the entry table.
 */
 #include <string>
 #include <map>
-#include "TableEntry.h"
 
 class SymbolTable{
     public:
         static SymbolTable* getSymbolTable();
-        void addToSymbolTable(std::string symbol, TableEntry entry);
+        int addToSymbolTable(std::string symbol, TableEntry entry);
         TableEntry getTableEntry(std::string symbol); 
+        int getSymbolTableLocation(std::string symbol);
+        int getSymbolTableLength();
+        int symbolExist(std::string symbol);
+        ~SymbolTable();
     private:
         static SymbolTable* uniqueSymbol;
         static std::map<std::string, TableEntry>* symbolMap;
+        static int totalLength;
         SymbolTable();
-        ~SymbolTable();
 }; 
 
 #endif 

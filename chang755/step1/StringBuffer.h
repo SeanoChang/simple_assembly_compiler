@@ -11,8 +11,8 @@ class StringBuffer{
     public:
         static StringBuffer* getStringBuffer();
         ~StringBuffer();
-        std::string getString();
-        void addString(std::string str);
+        std::string getString(int index);
+        int addString(std::string str);
     private:
         static StringBuffer* uniqueStrBuffer;
         static std::vector<std::string> strBuffer;

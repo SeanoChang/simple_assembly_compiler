@@ -17,12 +17,13 @@ class InstructionBuffer: public Instruction<Stmt*> {
         static InstructionBuffer* getInstructionBuffer();
         void initializeInstBuffer();
         ~InstructionBuffer() {};
-        void addToInstructionBuffer(Stmt* stmt);
-        void printInstructionBuffer();
+        void addToInstructionBuffer(Stmt* stmt, int loc, std::string);
+        int getInstructionBufferSize() const;
+        void printInstructionBuffer() const;
+        static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer;
     private: 
         // we need to the store the instruction with an array of smart unique pointers 
         static InstructionBuffer* uniqueInst;
-        static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer;
         InstructionBuffer();
 };
 
