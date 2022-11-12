@@ -19,4 +19,4 @@ This file will be handling the file i/o.
 
 // Write output
 // For print statements, we fetch the string from the string table and print it out.
-// For other instructions, 
+// For printos statements, we pop the value from the runtime stack and print it out.
