@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": true,
+      "externalConsole": false,
+      "cwd": "/Users/yihsiangchang/Desktop/Purdue/ECE39595/ece39595_project/chang755/step2",
+      "program": "/Users/yihsiangchang/Desktop/Purdue/ECE39595/ece39595_project/chang755/step2/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb"
+    }
+  ]
+}
