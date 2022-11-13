@@ -4,7 +4,7 @@
 
 TakeInputBehavior::~TakeInputBehavior() {};
 
-int stmt_ops::addToBuffer() {
+int TakeInputBehavior::addToBuffer() {
     // nothing to add to the buffer
 };
 
