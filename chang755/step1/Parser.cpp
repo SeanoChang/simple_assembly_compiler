@@ -22,7 +22,7 @@ It is the main class that calls all the other classes.
 
 using namespace std;
 
-void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream& outfile2){
+int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream& outfile2){
   // populate the instruction buffer for storing the instructions
   InstructionBuffer* ibuf = InstructionBuffer::getInstructionBuffer();
   // populate the symbol table for storing the variables
@@ -30,7 +30,8 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
   // populate the string buffer for storing the strings
   StringBuffer* sbuf = StringBuffer::getStringBuffer();
 
-
+  std::string end = "";
+  // read the file line by line
   while(!infile.eof()){
     // read a line
     std::string line;
@@ -64,39 +65,46 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
         validStmt = createInstruction(sm1[1]);
         if(validStmt == NULL){
           std::cerr << "invalid operation" << std::endl;
-          return;
+          return -1;
         } 
         // if the operation is valid, then add it to the instruction buffer.
         ibuf->addToInstructionBuffer(validStmt, -1, "");
+        if(sm1[1] == "end"){
+          end = "end";
+        } else if(sm1[1] == "return"){
+          // we return from the subroutine and pop off the stack of scope from the symbol table
+          symtab->popScope();
+          // after returning from the subroutine, we need to pop off the varaibles declared in the subroutine
+          // symtab->popVariables();
+        }
 
         break;
       case 3: // case for one operation and one variable/string
         validStmt = createInstruction(sm2[1]);
         if(validStmt == NULL){
           std::cerr << "invalid operation" << std::endl;
-          return;
+          return -1;
         } 
         var1 = sm2[2];
         instruction = sm2[1];
 
-        if(std::count(print_ops.begin(), print_ops.end(), instruction)) {
-          loc = print_ops_addToBuffer(var1, sbuf);
-        } else if (std::count(int_stmt_ops.begin(), int_stmt_ops.end(), instruction)) {
-          loc = int_stmt_ops_addToBuffer(var1);
-        } else if(std::count(var_stmt_ops.begin(), var_stmt_ops.end(), instruction)) {
-          loc = var_stmt_ops_addToBuffer(var1, symtab);
-        } else if(std::count(declscal_stmt_ops.begin(), declscal_stmt_ops.end(), instruction)) {
-          loc = declscal_stmt_ops_addToBuffer(var1, symtab);
-        } else if(std::count(decllabel_stmt_ops.begin(), decllabel_stmt_ops.end(), instruction)) {
-          loc = decllabel_stmt_ops_addToBuffer(var1, symtab);
-        } else if(std::count(label_stmt_ops.begin(), label_stmt_ops.end(), instruction)) {
-          loc = label_stmt_ops_addToBuffer(var1, symtab);
+        // if the operation is declaring a symbol, then add it to the symbol table
+        if(instruction == "label" || instruction == "declscal"){
+          loc = addToSymbolTable(var1, symtab);
+        } else if (instruction == "prints"){
+          // if the operation is printing a string, then add it to the string buffer
+          loc = addToStringBuffer(var1, sbuf);
+        } else if (instruction == "gosublabel"){
+          loc = addToSymbolTable(var1, symtab);
+          // now entering the subroutine
+          // add a new scope to the symbol table
+          symtab->addNewScope(symtab->getSymbolTableLength()-1);
         }
-        /*
-        The previous method was causing a lot of warnings.
-        To avoid the warnings, we have to add the variables to the buffers here.
-        */
 
+        if(loc == -1){
+          std::cerr << "Error adding to buffer... " << std::endl;
+          return -1;
+        }
 
         ibuf->addToInstructionBuffer(validStmt, loc, var1);
         break;
@@ -104,20 +112,31 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
         validStmt = createInstruction(sm3[1]);
         if(validStmt == NULL){
           std::cerr << "invalid operation" << std::endl;
-          return;
+          return -1;
         } 
         var1 = sm3[2];
         var2 = sm3[3];
-        std::cout << "Instruction: " << sm3[1] << " var1: " << var1 << " var2: " << var2 << "." << std::endl;
-        loc = declarr_stmt_ops_addToBuffer(var1, var2, symtab);
+        loc = addArrayToBuffer(var1, var2, symtab);
+        if(loc == -1){
+          std::cerr << "Error adding to buffer... " << std::endl;
+          return -1;
+        }
         ibuf->addToInstructionBuffer(validStmt, loc, var1);
         break;
       default:
         break;
     }
   }
+
+  // after reading the the file, check if there is an end statement 
+  if(end != "end"){
+    std::cerr << "Error: no end statement" << std::endl;
+    return -1;
+  }
+
+  /* Print out the instruction buffer and patch things up */
   std::cout << "=====================" << std::endl;
-  ibuf->printInstructionBuffer();
+
 
   for(auto& inst: ibuf->instBuffer){
     if(inst->getInstructionState() == -1){ // if the instruction is not patched up
@@ -132,7 +151,11 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
     }
   }
 
+
   ibuf->printInstructionBuffer();
+  std::cout << "=====================\n" << std::endl;
+
+  return 0;
 }
 
 /* checking if the operation is valid and return the type of vector it belongs too */
@@ -248,10 +271,14 @@ Stmt* Parser::createInstruction(std::string op) {
 
 // write output file
 int Parser::writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf){
-  for(auto& inst: ibuf->instBuffer){
-    outfile1 << inst->getInstruction() << " " << inst->getInstructionState() << std::endl;
-    outfile2 << inst->getInstruction() << " " << inst->getInstructionState()<< std::endl;
-  }
+  // First write the binary file for the .out file
+  // for the .out file, we need to print out the string buffer first
+  // then we print out the instruction buffer
+
+  // The second output file is .pout, which is txt file.
+  // for the .pout file, we just need to print the instruction buffer
+  // when we encounter print, we print the corresponding string from the string buffer
+
   return 0;
 }
 

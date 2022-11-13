@@ -15,18 +15,6 @@ class Opentersubroutine: public Stmt{
         static const std::string operation;
 };
 
-class Opexitsubroutine: public Stmt{   
-    public: 
-        Opexitsubroutine() {};
-        ~Opexitsubroutine() {};
-        int getOpcode();
-        std::string getOperation();
-        
-    private:
-        static const int opcode;
-        static const std::string operation;
-};
-
 class Oplabel: public Stmt{   
     public: 
         Oplabel() {};

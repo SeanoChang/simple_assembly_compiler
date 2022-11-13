@@ -43,5 +43,4 @@ void InstructionBuffer::printInstructionBuffer() const {
             std::cout << inst->getInstruction() << " " << inst->getInstructionState() <<std::endl;
         }
     }
-    std::cout << std::endl;
 }

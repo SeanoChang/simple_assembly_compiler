@@ -14,18 +14,6 @@ std::string Opentersubroutine::getOperation(){
     return operation;
 }
 
-/* op exit_subroutine */
-const int Opexitsubroutine::opcode = OP_EXIT_SUBROUTINE;
-const std::string Opexitsubroutine::operation= "ExitSubroutine";
-
-int Opexitsubroutine::getOpcode(){
-    return opcode;  
-}
-
-std::string Opexitsubroutine::getOperation(){
-    return operation;
-}
-
 /* Oplabel */
 const int Oplabel::opcode = 0;
 const std::string Oplabel::operation= "Label";
