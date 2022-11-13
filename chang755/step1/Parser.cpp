@@ -132,6 +132,11 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
   if(end != "end"){
     std::cerr << "Error: no end statement" << std::endl;
     return -1;
+  } else { // condition for stmt after end statement.
+    if(ibuf->instBuffer[ibuf->getInstructionBufferSize()-1]->getInstruction() != "Exit"){
+      std::cerr << "Error: stmt after end statement" << std::endl;
+      return -1;
+    }
   }
 
   /* Print out the instruction buffer and patch things up */
