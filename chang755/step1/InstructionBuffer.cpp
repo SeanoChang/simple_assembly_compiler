@@ -23,11 +23,10 @@ InstructionBuffer* InstructionBuffer::getInstructionBuffer() {
 
 void InstructionBuffer::addToInstructionBuffer(Stmt* stmt, int loc, std::string label) {
     if(stmt->getOpcode() != 0) {
-        std::cout << "Adding instruction to instruction buffer " << stmt->getOperation() << " " << loc << std::endl;
         if(instBuffer.size() == instBuffer.capacity()){
             instBuffer.reserve(instBuffer.capacity() * 2);
         }
-        instBuffer.push_back(make_unique<Instruction<Stmt>>(stmt, loc, label));
+        instBuffer.push_back(Make_unique<Instruction<Stmt>>(stmt, loc, label));
     }
 }
 

@@ -6,12 +6,19 @@ It is the main class that calls all the other classes.
 #include <fstream>
 #include <regex>
 #include "Parser.h"
-#include "TakeInputBehavior.h"
-#include "Stmt.h"
+#include "Helpers.h"
 #include "SymbolTable.h"
 #include "StringBuffer.h"
 #include "TableEntry.h"
 #include "Instruction.h"
+#include "DeclarrStmtOps.h"
+#include "DeclscalStmtOps.h"
+#include "DecllabelStmtOps.h"
+#include "LabelStmtOps.h"
+#include "VarStmtOps.h"
+#include "IntStmtOps.h"
+#include "PrintStmtOps.h"
+#include "StmtOps.h"
 
 using namespace std;
 
@@ -32,8 +39,8 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
     /* check if the line is a valid operation */
     // first break down the line into opcode and variables
     std::regex re1("([a-z]+)");
-    std::regex re2("([a-z]+)(\\s[a-zA-Z_0-9]*)");
-    std::regex re3("([a-z]+)(\\s[a-zA-Z_0-9]*)(\\s[a-zA-Z_0-9]*)");
+    std::regex re2("([a-z]+)(\\s[a-zA-Z_0-9]+)");
+    std::regex re3("([a-z]+)(\\s[a-zA-Z_0-9]+)(\\s[0-9]+$)");
     std::smatch sm1;
     std::smatch sm2;
     std::smatch sm3;
@@ -55,9 +62,8 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
     switch(num_groups){
       case 2: // case for only operation
         validStmt = createInstruction(sm1[1]);
-        std::cout << sm1[1] << std::endl;
         if(validStmt == NULL){
-          std::cout << "invalid operation" << std::endl;
+          std::cerr << "invalid operation" << std::endl;
           return;
         } 
         // if the operation is valid, then add it to the instruction buffer.
@@ -66,41 +72,44 @@ void Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream
         break;
       case 3: // case for one operation and one variable/string
         validStmt = createInstruction(sm2[1]);
-        std::cout << sm2[1] << std::endl;
         if(validStmt == NULL){
-          std::cout << "invalid operation" << std::endl;
+          std::cerr << "invalid operation" << std::endl;
           return;
         } 
         var1 = sm2[2];
         instruction = sm2[1];
 
         if(std::count(print_ops.begin(), print_ops.end(), instruction)) {
-          loc = validStmt->takeInput(var1, sbuf);
+          loc = print_ops_addToBuffer(var1, sbuf);
         } else if (std::count(int_stmt_ops.begin(), int_stmt_ops.end(), instruction)) {
-          loc = validStmt->takeInput(var1);
+          loc = int_stmt_ops_addToBuffer(var1);
         } else if(std::count(var_stmt_ops.begin(), var_stmt_ops.end(), instruction)) {
-          loc = validStmt->takeInput(var1, symtab);
+          loc = var_stmt_ops_addToBuffer(var1, symtab);
         } else if(std::count(declscal_stmt_ops.begin(), declscal_stmt_ops.end(), instruction)) {
-          loc = validStmt->takeInput(var1, symtab);
+          loc = declscal_stmt_ops_addToBuffer(var1, symtab);
         } else if(std::count(decllabel_stmt_ops.begin(), decllabel_stmt_ops.end(), instruction)) {
-          loc = validStmt->takeInput(var1, symtab);
+          loc = decllabel_stmt_ops_addToBuffer(var1, symtab);
         } else if(std::count(label_stmt_ops.begin(), label_stmt_ops.end(), instruction)) {
-          loc = validStmt->takeInput(var1, symtab);
+          loc = label_stmt_ops_addToBuffer(var1, symtab);
         }
+        /*
+        The previous method was causing a lot of warnings.
+        To avoid the warnings, we have to add the variables to the buffers here.
+        */
 
 
         ibuf->addToInstructionBuffer(validStmt, loc, var1);
         break;
       case 4: // case for one operation and two varibles/strings
         validStmt = createInstruction(sm3[1]);
-        std::cout << sm3[1]<< std::endl;
         if(validStmt == NULL){
-          std::cout << "invalid operation" << std::endl;
+          std::cerr << "invalid operation" << std::endl;
           return;
         } 
         var1 = sm3[2];
         var2 = sm3[3];
-        loc = validStmt->takeInput(var1, var2, symtab);
+        std::cout << "Instruction: " << sm3[1] << " var1: " << var1 << " var2: " << var2 << "." << std::endl;
+        loc = declarr_stmt_ops_addToBuffer(var1, var2, symtab);
         ibuf->addToInstructionBuffer(validStmt, loc, var1);
         break;
       default:
