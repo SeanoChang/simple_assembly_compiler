@@ -1,39 +1,74 @@
-#ifndef INSTRUCTIONS_H
-#define INSTRUCTIONS_H
+#ifndef INSTRUCTION_H
+#define INSTRUCTION_H
 
-#include "ExecuteBehavior.h"
+#include <iostream>
+#include <string>
 
-class Instruction{
-public:
-    Instruction() {};
-    virtual ~Instruction() = 0;
-protected: 
-    int locationInBuffer;
-    ExecuteBehavior* executeBehavior;
+/*
+Instruction class is a template for the instructions that make up the buffer.
+Also, the instruction class is a stack.
+*/
+
+template <typename T> class Instruction{
+    public: 
+        Instruction ();
+        Instruction (T* newInstruction, int loc, std::string);
+        ~Instruction ();
+        std::string getInstruction();
+        std::string getLabel();
+        int getInstructionState();
+        void setInstructionState(int _state);
+        void setLabel(std::string _label);
+        T* getInstructionPtr();
+    private: 
+        T* instruction;
+        int state;
+        std::string label;
 };
 
-class OP_ENTER_SUBROUTINE: public Instruction{};
-class OP_START_PROGRAM: public Instruction{};
-class OP_EXIT: public Instruction{};
-class OP_JUMP: public Instruction{};
-class OP_JUMPZERO: public Instruction{};
-class OP_JUMPNZERO: public Instruction{};
-class OP_GOSUB: public Instruction{};
-class OP_RETURN: public Instruction{};
-class OP_GOSUB: public Instruction{};
-class OP_PUSHSCALAR: public Instruction{};
-class OP_PUSHARRAY: public Instruction{};
-class OP_PUSHI: public Instruction{};
-class OP_POP: public Instruction{};
-class OP_POP_SCALAR: public Instruction{};
-class OP_POP_ARRAY: public Instruction{};
-class OP_DUP: public Instruction{};
-class OP_SWAP: public Instruction{};
-class OP_ADD: public Instruction{};
-class OP_NEGATE: public Instruction{};
-class OP_MUL: public Instruction{};
-class OP_DIV: public Instruction{};
-class OP_PRINTS: public Instruction{};
-class OP_PRINTTOS: public Instruction{};
+template <typename T> Instruction<T>::Instruction(){
+    instruction = NULL;
+    state = -1;
+    label = "";
+};
 
-#endif
+template <typename T> Instruction<T>::Instruction(T* newInstruction, int loc, std::string _label){
+    instruction = newInstruction;
+    state = loc;
+    label = _label;
+};
+
+template <typename T> Instruction<T>::~Instruction(){
+    delete instruction;
+};
+
+template <typename T> std::string Instruction<T>::getInstruction(){
+    return instruction->getOperation();
+};
+
+template <typename T> std::string Instruction<T>::getLabel(){
+    return label;
+};
+
+template <typename T> int Instruction<T>::getInstructionState(){
+    return state;
+};
+
+template <typename T> void Instruction<T>::setInstructionState(int _state){
+    state = _state;
+};
+
+template <typename T> void Instruction<T>::setLabel(std::string _label){
+    label = _label;
+};
+
+template <typename T> T* Instruction<T>::getInstructionPtr(){
+    return instruction;
+};
+
+// the part for make unique
+template <typename T, typename... Args> std::unique_ptr<T> Make_unique(Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+};
+
+#endif 

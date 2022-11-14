@@ -1,4 +1,9 @@
 #include <iostream>
+#include <cstdlib>
+#include <fstream>
+#include <string>
+
+#include "VirtualMachine.h"
 
 /*
 This is the main of step two.
@@ -11,8 +16,40 @@ int main(int argc, char* argv[]) {
     // and store them in the instruction memory,
     // string table if needed.
 
+    if(argc == 1){
+        std::cout << "No input file" << std::endl;
+        exit(1);
+    }
+
+    std::string infile = argv[1];
+    std::ifstream inFile(infile, std::ios::in | std::ios::binary);
+    if(!inFile){
+        std::cout << "Cannot open input file" << std::endl;
+        exit(1);
+    }
+
+    // std::ofstream outFile(infile+".out", std::ios::out);
+    // if(!outFile){
+    //     std::cout << "Cannot open .out file" << std::endl;
+    //     exit(1);
+    // }
+
+    // std::ofstream poutFile(infile+".pout", std::ios::out | std::ios::binary);
+    // if(!poutFile){
+    //     std::cout << "Cannot open .pout file" << std::endl;
+    //     exit(1);
+    // }
+    
+    VirtualMachine vm = VirtualMachine();
+    if(vm.run() == -1){
+        std::cerr << "Error in running" << std::endl;
+        exit(1);
+    }
+
+    exit(0);
+
 
     // Execute the instructions in the instruction memory
-    
+
 
 }
