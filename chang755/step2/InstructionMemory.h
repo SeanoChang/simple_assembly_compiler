@@ -5,12 +5,12 @@
 
 #include "Stmt.h"
 #include "Instruction.h"
-class InstructionMemory {
+class InstructionMemory { 
     public:
         InstructionMemory();
         ~InstructionMemory() {};
-        int addToInstructionMemory(Stmt* stmt, int loc, std::string);
-        static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer;
+        int addToInstructionMemory(Stmt* stmt, int loc, std::string); /* add instructions to the memory */
+        static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer; /* instruction buffer with smart pointers  */
 };
 
 #endif 

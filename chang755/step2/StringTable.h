@@ -8,8 +8,8 @@ class StringTable {
     public: 
         StringTable();
         ~StringTable();
-        int addString(char* str);
-        std::string getString(int index);
+        int addString(char* str); /* add the string to string table */
+        std::string getString(int index); /* pop off the string from the string table  */
 
     private: 
         std::vector<std::string> strTab;

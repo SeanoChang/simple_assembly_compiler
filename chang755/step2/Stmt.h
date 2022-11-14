@@ -3,6 +3,7 @@
 
 #include <string>
 
+/* abstract class for all the instructions */
 class Stmt {
     public:
         Stmt() {};

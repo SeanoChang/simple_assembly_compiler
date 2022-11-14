@@ -10,8 +10,8 @@ class VirtualMachine {
     public: 
         VirtualMachine();
         ~VirtualMachine();
-        int run();
-        int loadProgram();
+        int run(); /* run the virtual machine */
+        int loadProgram(); /* load the program into the instruction memory */
 
     private: 
         int pc;
