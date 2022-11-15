@@ -16,3 +16,18 @@ VirtualMachine::VirtualMachine(){
     strTable = new StringTable();
     runStack = new RuntimeStack();
 }
+
+VirtualMachine::~VirtualMachine(){
+    delete instMem;
+    delete dataMem;
+    delete strTable;
+    delete runStack;
+}
+
+int VirtualMachine::run(){
+    
+
+
+
+    return 0;
+}

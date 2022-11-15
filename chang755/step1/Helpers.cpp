@@ -2,9 +2,13 @@
 #include <string>
 #include "Helpers.h"
 
-int addToSymbolTable(std::string symbol, SymbolTable* symtab) {
+int addScalarToSymbolTable(std::string symbol, SymbolTable* symtab) {
     int location = symtab->getSymbolTableLength();
     return symtab->addToSymbolTable(symbol, TableEntry(location, 1));
+}
+
+int addLabelToSymbolTable(std::string symbol, int location, SymbolTable* symtab) {
+    return symtab->addToSymbolTable(symbol, TableEntry(location, 0));
 }
 
 int addToStringBuffer(std::string symbol, StringBuffer* strbfr) {

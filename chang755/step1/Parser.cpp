@@ -40,7 +40,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
     /* check if the line is a valid operation */
     // first break down the line into opcode and variables
     std::regex re1("([a-z]+)");
-    std::regex re2("([a-z]+)(\\s[a-zA-Z_0-9]+)");
+    std::regex re2("([a-z]+)(\\s[a-zA-Z_0-9\\+=\\*/]+)");
     std::regex re3("([a-z]+)(\\s[a-zA-Z_0-9]+)(\\s[0-9]+$)");
     std::smatch sm1;
     std::smatch sm2;
@@ -48,6 +48,8 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
     std::regex_search(line, sm1, re1);
     std::regex_search(line, sm2, re2);
     std::regex_search(line, sm3, re3);
+
+    
     // regex will split the line into multiple groups
     // determine the number of groups
     int num_groups = sm3.size() == 0 ? (sm2.size() == 0 ? sm1.size() : sm2.size()) : sm3.size();
@@ -72,10 +74,10 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
         if(sm1[1] == "end"){
           end = "end";
         } else if(sm1[1] == "return"){
-          // we return from the subroutine and pop off the stack of scope from the symbol table
-          symtab->popScope();
           // after returning from the subroutine, we need to pop off the varaibles declared in the subroutine
           // symtab->popVariables();
+          // pop off the stack of scope from the symbol table
+          symtab->popScope();
         }
 
         break;
@@ -89,16 +91,27 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
         instruction = sm2[1];
 
         // if the operation is declaring a symbol, then add it to the symbol table
-        if(instruction == "label" || instruction == "declscal"){
-          loc = addToSymbolTable(var1, symtab);
+        if(instruction == "label"){
+          int location = ibuf->getInstructionBufferSize();
+          loc = addLabelToSymbolTable(var1, location,  symtab);
+        } else if(instruction == "declscal"){
+          loc = addScalarToSymbolTable(var1, symtab);
         } else if (instruction == "prints"){
+          // strip off the whitespaces for the string
+          std::regex re("([a-zA-Z_0-9\\+=\\*/]+)");
+          std::smatch sm;
+          std::regex_search(var1, sm, re);
+          var1 = sm[1];
           // if the operation is printing a string, then add it to the string buffer
           loc = addToStringBuffer(var1, sbuf);
         } else if (instruction == "gosublabel"){
-          loc = addToSymbolTable(var1, symtab);
+          int location = ibuf->getInstructionBufferSize();
+          loc = addLabelToSymbolTable(var1, location, symtab);
           // now entering the subroutine
           // add a new scope to the symbol table
-          symtab->addNewScope(symtab->getSymbolTableLength()-1);
+          symtab->addNewScope();
+        } else if(instruction == "pushi"){
+          loc = stoi(var1);
         }
 
         if(loc == -1){

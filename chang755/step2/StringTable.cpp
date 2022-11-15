@@ -7,18 +7,23 @@ This class will be implemented as a singleton.
 #include <iostream>
 #include "StringTable.h"
 
+std::vector<std::string> StringTable::strTab = std::vector<std::string>();
+
 StringTable::StringTable() {
-    this->strTab.push_back(0);
-    vec_idx = 0;
+    strTab.reserve(20);
 }
 
-std::string StringTable::getStringTable(int index) {
-    return(strTab.pop_back(index))
+std::string StringTable::getString() {
+    std::string str = strTab[strTab.size()-1];
+    strTab.pop_back();
+    return str;
 }
 
-int StringTable::addString(char* str, int vec_idx) {
-    strTab[vec_idx].push_back(str);
-    vec_idx ++;
+int StringTable::addString(std::string str) {
+    if(strTab.size() == strTab.capacity()){
+        strTab.reserve(strTab.capacity() * 2);
+    }
+    strTab.push_back(str);
     return 1;
 }
 

@@ -6,13 +6,13 @@ Description: This class is for storing the instructions and their location.
 #include <iostream>
 #include "InstructionMemory.h"
 
+std::vector<std::unique_ptr<Instruction<Stmt>>> InstructionMemory::instMemory = std::vector<std::unique_ptr<Instruction<Stmt>>>();
+
 InstructionMemory::InstructionMemory(){
-    InstructionMemory.reserve(20);
+    instMemory.reserve(20);
 }
 
-InstructionMemory::~InstructionMemory() {
-    delete instMemory;
-}
+InstructionMemory::~InstructionMemory() {}
 
 int InstructionMemory::addToInstructionMemory(Stmt* stmt, int loc, std::string label) {
     if(stmt->getOpcode() != 0) {
@@ -22,6 +22,4 @@ int InstructionMemory::addToInstructionMemory(Stmt* stmt, int loc, std::string l
         instMemory.push_back(Make_unique<Instruction<Stmt>>(stmt, loc, label));
     }
 }
-
-std::vector<std::string> InstructionMemory::instMemory = std::vector<std::string>();
 

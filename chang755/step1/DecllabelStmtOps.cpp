@@ -2,18 +2,6 @@
 
 #include "DecllabelStmtOps.h"
 
-/* op enter_subroutine */
-const int Opentersubroutine::opcode = OP_ENTER_SUBROUTINE;
-const std::string Opentersubroutine::operation= "EnterSubroutine";
-
-int Opentersubroutine::getOpcode(){
-    return opcode;  
-}
-
-std::string Opentersubroutine::getOperation(){
-    return operation;
-}
-
 /* Oplabel */
 const int Oplabel::opcode = 0;
 const std::string Oplabel::operation= "Label";
@@ -27,7 +15,7 @@ std::string Oplabel::getOperation(){
 }
 
 /* Opgosublabel */
-const int Opgosublabel::opcode = 0;
+const int Opgosublabel::opcode = OP_ENTER_SUBROUTINE;
 const std::string Opgosublabel::operation= "GoSubLabel";
 
 int Opgosublabel::getOpcode(){

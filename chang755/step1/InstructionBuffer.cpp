@@ -39,8 +39,14 @@ void InstructionBuffer::printInstructionBuffer() const {
         if(inst->getInstructionState() >= 0){
             if(inst->getInstruction() == "Prints"){
                 std::cout << inst->getInstruction() << " " << inst->getLabel() << std::endl;
+            } else if(inst->getInstruction() == "PrintTOS" || inst->getInstruction() == "Add" || inst->getInstruction() == "Div" || 
+            inst->getInstruction() == "Return" || inst->getInstruction() == "Exit" || inst->getInstruction() == "Dup" || 
+            inst->getInstruction() == "Swap" || inst->getInstruction() == "Pop" ||
+            inst->getInstruction() == "Mul" || inst->getInstruction() == "Negate") {
+                std::cout << inst->getInstruction() << " " << std::endl;
+            } else{
+                std::cout << inst->getInstruction() << " " << inst->getInstructionState() <<std::endl;
             }
-            std::cout << inst->getInstruction() << " " << inst->getInstructionState() <<std::endl;
         }
     }
 }
