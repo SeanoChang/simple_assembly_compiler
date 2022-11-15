@@ -7,5 +7,16 @@ PushI push an integer onto the runtime stack.
 */
 
 #include <iostream>
-
 #include "RuntimeStack.h"
+
+RuntimeStack::RuntimeStack() {
+    this->runStack.push_back(0);
+}
+
+int RuntimeStack::push(int val) {
+    runStack.push_back(val);
+}
+
+int RuntimeStack::pop() {
+    runStack.pop_back();
+}

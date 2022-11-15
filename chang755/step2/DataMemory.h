@@ -5,8 +5,8 @@
 
 class DataMemory {
     public: 
-        DataMemory();
-        ~DataMemory();
+        DataMemory(){};
+        ~DataMemory(){};
         int push(int val); /* push on the data memory stack */
         int pop(); /* pop off the data from the stack */
     private: 

@@ -13,6 +13,7 @@ class StringTable {
 
     private: 
         std::vector<std::string> strTab;
+        int vec_idx;
 };  
 
 #endif 

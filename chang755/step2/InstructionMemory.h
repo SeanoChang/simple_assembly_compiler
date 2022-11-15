@@ -10,7 +10,7 @@ class InstructionMemory {
         InstructionMemory();
         ~InstructionMemory() {};
         int addToInstructionMemory(Stmt* stmt, int loc, std::string); /* add instructions to the memory */
-        static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer; /* instruction buffer with smart pointers  */
+        static std::vector<std::unique_ptr<Instruction<Stmt>>> instMemory; /* instruction buffer with smart pointers  */
 };
 
 #endif 
