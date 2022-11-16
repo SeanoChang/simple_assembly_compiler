@@ -20,8 +20,7 @@ class SymbolTable{
         int getSymbolTableLength();
         // push and pop scope if enter or exit a subroutine
         void addNewScope(); 
-        void popScope();
-        void popVariablesScope();
+        int popScope();
     private:
         static SymbolTable* uniqueSymbol;
         static std::vector<std::map<std::string, TableEntry>> symbolMaps;

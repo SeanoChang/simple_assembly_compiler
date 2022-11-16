@@ -24,7 +24,7 @@ class InstructionBuffer: public Instruction<Stmt*> {
         int getInstructionBufferSize() const;
         void printInstructionBuffer() const;
         static std::vector<std::unique_ptr<Instruction<Stmt>>> instBuffer;
-        void patchUpInstructionBuffer(SymbolTable* symtab);
+        void patchUpInstructionBuffer(SymbolTable* symtab, int goSubLabel);
     private: 
         // we need to the store the instruction with an array of smart unique pointers 
         static InstructionBuffer* uniqueInst;

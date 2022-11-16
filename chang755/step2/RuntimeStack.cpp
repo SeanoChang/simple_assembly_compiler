@@ -13,10 +13,16 @@ RuntimeStack::RuntimeStack() {
     this->runStack.push_back(0);
 }
 
-int RuntimeStack::push(int val) {
+void RuntimeStack::push(int val) {
     runStack.push_back(val);
 }
 
+int RuntimeStack::peek() {
+    return runStack.back();
+}
+
 int RuntimeStack::pop() {
+    int val = runStack.back();
     runStack.pop_back();
+    return val;
 }

@@ -34,12 +34,14 @@ int InstructionBuffer::getInstructionBufferSize() const {
     return instBuffer.size();
 }
 
-void InstructionBuffer::patchUpInstructionBuffer(SymbolTable* symtab) {
+void InstructionBuffer::patchUpInstructionBuffer(SymbolTable* symtab, int goSubLabel) {
     for(auto& inst : instBuffer) {
         std::string str = inst->getInstruction();
         if(inst->getInstructionState() == -2){ // if the instruction has empty state then patch up
             if(str == "Start"){ // patching start with size of symtab
                 inst->setInstructionState(symtab->getSymbolTableLength());
+            } else if(str == "GoSubLabel"){
+                inst->setInstructionState(goSubLabel);
             } else if(str == "GoSub" || str == "Jump"){ // patching GoSub with the label and location of the label 
                 inst->setInstructionState(symtab->getSymbolTableLocation(inst->getLabel()));
             } else if(str == "Mul" || str == "Div" || str == "Add" || str == "Dup" ||

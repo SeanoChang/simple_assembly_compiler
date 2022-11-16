@@ -9,6 +9,7 @@ SOURCE2 = $(wildcard $(STEP2)*.cpp)
 OBJS2 = 
 HOBJS2 =
 TESTS = $(wildcard testcases/*)
+TESTS2 = $(wildcard results/*.out)
 
 VALGRIND = valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose
 
@@ -28,7 +29,16 @@ test1: clean step1
 step1: $(SOURCE1) $(HOBJS1)
 	$(CC) $(CFLAGS) $(SOURCE1) -o step1
 
-.PHONY: step2
+.PHONY: test2
+test2: step2
+	mkdir -p step2_results
+	@echo "Testing step2"
+	@for i in $(TESTS2); do \
+		echo "Testing $$i"; \
+		./step2 $$i; \
+		mv testcases/*.vout step2_results; \
+	done
+
 step2: $(OBJS2) $(HOBJS2)
 	$(CC) $(CFLAGS) $(OBJS2) -o step2
 

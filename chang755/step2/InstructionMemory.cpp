@@ -14,6 +14,14 @@ InstructionMemory::InstructionMemory(){
 
 InstructionMemory::~InstructionMemory() {}
 
+std::string InstructionMemory::getInstruction(int loc) {
+    return instMemory[loc]->getInstruction();
+}
+
+int InstructionMemory::getState(int loc) {
+    return instMemory[loc]->getInstructionState();
+}
+
 int InstructionMemory::addToInstructionMemory(Stmt* stmt, int loc, std::string label) {
     if(stmt->getOpcode() != 0) {
         if(instMemory.size() == instMemory.capacity()){

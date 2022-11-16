@@ -12,30 +12,25 @@ Also, the instruction class is a stack.
 template <typename T> class Instruction{
     public: 
         Instruction ();
-        Instruction (T* newInstruction, int loc, std::string);
+        Instruction (T* newInstruction, int loc);
         ~Instruction ();
         std::string getInstruction();
-        std::string getLabel();
         int getInstructionState();
         void setInstructionState(int _state);
-        void setLabel(std::string _label);
         T* getInstructionPtr();
     private: 
         T* instruction;
         int state;
-        std::string label;
 };
 
 template <typename T> Instruction<T>::Instruction(){
     instruction = NULL;
     state = -1;
-    label = "";
 };
 
-template <typename T> Instruction<T>::Instruction(T* newInstruction, int loc, std::string _label){
+template <typename T> Instruction<T>::Instruction(T* newInstruction, int loc){
     instruction = newInstruction;
     state = loc;
-    label = _label;
 };
 
 template <typename T> Instruction<T>::~Instruction(){
@@ -46,20 +41,12 @@ template <typename T> std::string Instruction<T>::getInstruction(){
     return instruction->getOperation();
 };
 
-template <typename T> std::string Instruction<T>::getLabel(){
-    return label;
-};
-
 template <typename T> int Instruction<T>::getInstructionState(){
     return state;
 };
 
 template <typename T> void Instruction<T>::setInstructionState(int _state){
     state = _state;
-};
-
-template <typename T> void Instruction<T>::setLabel(std::string _label){
-    label = _label;
 };
 
 template <typename T> T* Instruction<T>::getInstructionPtr(){

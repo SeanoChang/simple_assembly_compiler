@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
+#include <regex>
 
 #include "VirtualMachine.h"
 
@@ -33,15 +34,19 @@ int main(int argc, char* argv[]) {
     //     std::cout << "Cannot open .out file" << std::endl;
     //     exit(1);
     // }
+    std::regex re("([0-9a-zA-Z_]+)");
+    std::smatch sm;
+    std::regex_search(infile,sm,re);
+    std::string voutfile = sm[1];
 
-    // std::ofstream poutFile(infile+".pout", std::ios::out | std::ios::binary);
-    // if(!poutFile){
-    //     std::cout << "Cannot open .pout file" << std::endl;
-    //     exit(1);
-    // }
+    std::ofstream voutFile(voutfile+".vout",  std::ios::out);
+    if(!voutFile){
+        std::cout << "Cannot open .pout file" << std::endl;
+        exit(1);
+    }
     
     VirtualMachine vm = VirtualMachine();
-    if(vm.run() == -1){
+    if(vm.run(inFile, voutFile) == -1){
         std::cerr << "Error in running" << std::endl;
         exit(1);
     }
@@ -53,3 +58,4 @@ int main(int argc, char* argv[]) {
 
 
 }
+

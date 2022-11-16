@@ -64,7 +64,8 @@ void SymbolTable::addNewScope() {
     symbolMaps.push_back(std::map<std::string, TableEntry>());
 }
 
-void SymbolTable::popScope() {
+int SymbolTable::popScope() {
+    int scopeLength = mapLengths[scopes];
     // delete the symbol map first
     symbolMaps.pop_back();
     // delete the length of the symbol map
@@ -72,4 +73,5 @@ void SymbolTable::popScope() {
     mapLengths.pop_back();
     // delete the length
     scopes--;
+    return scopeLength;
 }

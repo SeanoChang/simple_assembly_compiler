@@ -32,6 +32,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
 
   std::string end = "";
   // read the file line by line
+  int goSubLabel = 0; // initial size of the goSubLabel
   while(!infile.eof()){
     // read a line
     std::string line;
@@ -77,7 +78,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
           // after returning from the subroutine, we need to pop off the varaibles declared in the subroutine
           // symtab->popVariables();
           // pop off the stack of scope from the symbol table
-          symtab->popScope();
+          goSubLabel = symtab->popScope();
         }
 
         break;
@@ -109,8 +110,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
           // if the operation is printing a string, then add it to the string buffer
           loc = addToStringBuffer(var1, sbuf);
         } else if (instruction == "gosublabel"){
-          int location = ibuf->getInstructionBufferSize();
-          loc = addLabelToSymbolTable(var1, location, symtab);
+          loc = addLabelToSymbolTable(var1, -2, symtab);
           // now entering the subroutine
           // add a new scope to the symbol table
           symtab->addNewScope();
@@ -167,7 +167,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
   /* Print out the instruction buffer and patch things up */
   std::cout << "=====================" << std::endl;
 
-  ibuf->patchUpInstructionBuffer(symtab);
+  ibuf->patchUpInstructionBuffer(symtab, goSubLabel);
 
   ibuf->printInstructionBuffer();
   std::cout << "=====================\n" << std::endl;
@@ -290,7 +290,29 @@ Stmt* Parser::createInstruction(std::string op) {
 int Parser::writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf, StringBuffer* sbuf){
   // write to output file 1
   // print out all the string first
+  
+  for(int i = 0; i < sbuf->getStrBufferSize(); i++){
+    std::string str = sbuf->getString(i);
+    outfile1 << str << "\n";
+  }
+
   // print out all the instruction
+
+  for(auto& inst: ibuf->instBuffer){
+    std::string str = inst->getInstruction();
+    if(inst->getInstructionState() >= 0){
+        if(str == "Prints"){
+            outfile1 << str << " " << inst->getInstructionState() << "\n";
+        } else if(str == "PrintTOS" || str == "Add" || str == "Div" || 
+        str == "Return" || str == "Exit" || str == "Dup" || 
+        str == "Swap" || str == "Pop" ||
+        str == "Mul" || str == "Negate") {
+            outfile1 << str << " \n";
+        } else{
+            outfile1 << str << " " << inst->getInstructionState() << "\n";
+        }
+    }
+  }
 
   // run through ibuf and write to output file 2
   for (auto& inst: ibuf->instBuffer) {
