@@ -25,6 +25,7 @@ class SymbolTable{
     private:
         static SymbolTable* uniqueSymbol;
         static std::vector<std::map<std::string, TableEntry>> symbolMaps;
+        static std::vector<int> mapLengths;
         static int totalLength;
         SymbolTable();
         // we check if the symbol is duplicate under the same scope

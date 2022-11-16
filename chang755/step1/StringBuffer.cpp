@@ -25,9 +25,21 @@ StringBuffer* StringBuffer::getStringBuffer(){
     return uniqueStrBuffer;
 }
 
+/* get string buffer size */
+int StringBuffer::getStrBufferSize(){
+    return strBuffer.size();
+}
+
 /* get the string */
 std::string StringBuffer::getString(int index) {
     return strBuffer[index];
+}
+
+/* pop the string */
+std::string StringBuffer::popString() {
+    std::string str = strBuffer.back();
+    strBuffer.pop_back();
+    return str;
 }
 
 /* add the string to the buffer and return the position added in the buffer*/

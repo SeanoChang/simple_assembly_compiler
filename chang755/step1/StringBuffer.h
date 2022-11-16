@@ -11,7 +11,9 @@ class StringBuffer{
     public:
         static StringBuffer* getStringBuffer();
         ~StringBuffer();
+        int getStrBufferSize();
         std::string getString(int index);
+        std::string popString();
         int addString(std::string str);
     private:
         static StringBuffer* uniqueStrBuffer;

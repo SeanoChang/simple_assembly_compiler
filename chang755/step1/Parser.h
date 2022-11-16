@@ -67,7 +67,7 @@ class Parser {
         int parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream& outfile2);
     private:
         Stmt* createInstruction(std::string op);
-        int writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf);
+        int writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf, StringBuffer* sbuf);
 };  
 
 #endif /* PARSER_H_ */

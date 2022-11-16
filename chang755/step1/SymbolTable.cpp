@@ -12,12 +12,15 @@ Symbol table is a map that maps a variable to a key that is a table entry.
 
 SymbolTable* SymbolTable::uniqueSymbol = NULL;
 std::vector<std::map<std::string, TableEntry>> SymbolTable::symbolMaps = std::vector<std::map<std::string, TableEntry>>();
-int SymbolTable::totalLength = 0;
+std::vector<int> SymbolTable::mapLengths = std::vector<int>();
 int SymbolTable::scopes = 0;
+int SymbolTable::totalLength = 0;
 
 SymbolTable::SymbolTable() {
     symbolMaps.reserve(10);
     symbolMaps.push_back(std::map<std::string, TableEntry>());
+    mapLengths.reserve(10);
+    mapLengths.push_back(0);
 }
 
 SymbolTable::~SymbolTable() {
@@ -38,6 +41,7 @@ int SymbolTable::addToSymbolTable(std::string symbol, TableEntry entry) {
     }
     // check if there is a new scope
     symbolMaps[scopes][symbol] = entry;
+    mapLengths[scopes] += entry.getLength();
     totalLength += entry.getLength();
     return entry.getLocation();
 }
@@ -62,5 +66,10 @@ void SymbolTable::addNewScope() {
 
 void SymbolTable::popScope() {
     // delete the symbol map first
+    symbolMaps.pop_back();
+    // delete the length of the symbol map
+    totalLength -= mapLengths[scopes];
+    mapLengths.pop_back();
+    // delete the length
     scopes--;
 }

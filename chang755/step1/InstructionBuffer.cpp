@@ -34,18 +34,42 @@ int InstructionBuffer::getInstructionBufferSize() const {
     return instBuffer.size();
 }
 
+void InstructionBuffer::patchUpInstructionBuffer(SymbolTable* symtab) {
+    for(auto& inst : instBuffer) {
+        std::string str = inst->getInstruction();
+        if(inst->getInstructionState() == -2){ // if the instruction has empty state then patch up
+            if(str == "Start"){ // patching start with size of symtab
+                inst->setInstructionState(symtab->getSymbolTableLength());
+            } else if(str == "GoSub" || str == "Jump"){ // patching GoSub with the label and location of the label 
+                inst->setInstructionState(symtab->getSymbolTableLocation(inst->getLabel()));
+            } else if(str == "Mul" || str == "Div" || str == "Add" || str == "Dup" ||
+             str == "Swap" || str == "Pop" || str == "Push" || str == "PrintTOS" || str == "Return"
+             || str == "Exit" || str == "Negate") {
+                inst->setInstructionState(0);
+            }
+        }
+    }
+}
+
 void InstructionBuffer::printInstructionBuffer() const {
     for (auto& inst: instBuffer) {
+        std::string str = inst->getInstruction();
         if(inst->getInstructionState() >= 0){
-            if(inst->getInstruction() == "Prints"){
-                std::cout << inst->getInstruction() << " " << inst->getLabel() << std::endl;
-            } else if(inst->getInstruction() == "PrintTOS" || inst->getInstruction() == "Add" || inst->getInstruction() == "Div" || 
-            inst->getInstruction() == "Return" || inst->getInstruction() == "Exit" || inst->getInstruction() == "Dup" || 
-            inst->getInstruction() == "Swap" || inst->getInstruction() == "Pop" ||
-            inst->getInstruction() == "Mul" || inst->getInstruction() == "Negate") {
-                std::cout << inst->getInstruction() << " " << std::endl;
+            if(str == "Prints"){
+                std::cout << str << " " << inst->getLabel() << std::endl;
+            } else if(str == "PrintTOS" || str == "Add" || str == "Div" || 
+            str == "Return" || str == "Exit" || str == "Dup" || 
+            str == "Swap" || str == "Pop" ||
+            str == "Mul" || str == "Negate") {
+                std::cout << str << " " << std::endl;
+            } else if(str == "GoSub" || str == "PopScalar" || str == "PushScalar" ||
+            str == "PushArray" || str == "PopArray" || str == "JumpZero" ||
+            str == "JumpNZero") {
+                std::cout << str << " " << inst->getLabel() << " " << inst->getInstructionState()  << std::endl;
+            } else if(str == "GoSubLabel"){
+                std::cout << str << " " << inst->getLabel() << std::endl;
             } else{
-                std::cout << inst->getInstruction() << " " << inst->getInstructionState() <<std::endl;
+                std::cout << str << " " << inst->getInstructionState() <<std::endl;
             }
         }
     }

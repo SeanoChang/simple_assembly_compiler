@@ -60,7 +60,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
     std::string var2;
     Stmt* validStmt = NULL;
     std::string instruction = "";
-    int loc = 0;
+    int loc = -2; // empty state for the location
 
     switch(num_groups){
       case 2: // case for only operation
@@ -70,7 +70,7 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
           return -1;
         } 
         // if the operation is valid, then add it to the instruction buffer.
-        ibuf->addToInstructionBuffer(validStmt, -1, "");
+        ibuf->addToInstructionBuffer(validStmt, loc, "");
         if(sm1[1] == "end"){
           end = "end";
         } else if(sm1[1] == "return"){
@@ -86,9 +86,18 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
         if(validStmt == NULL){
           std::cerr << "invalid operation" << std::endl;
           return -1;
-        } 
+        }
+
+        // strip the whitespace from the variable
+
         var1 = sm2[2];
         instruction = sm2[1];
+        if(1){
+          std::regex re("([a-zA-Z_0-9\\+=\\*/]+)");
+          std::smatch sm;
+          std::regex_search(var1, sm, re);
+          var1 = sm[1];
+        }
 
         // if the operation is declaring a symbol, then add it to the symbol table
         if(instruction == "label"){
@@ -97,11 +106,6 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
         } else if(instruction == "declscal"){
           loc = addScalarToSymbolTable(var1, symtab);
         } else if (instruction == "prints"){
-          // strip off the whitespaces for the string
-          std::regex re("([a-zA-Z_0-9\\+=\\*/]+)");
-          std::smatch sm;
-          std::regex_search(var1, sm, re);
-          var1 = sm[1];
           // if the operation is printing a string, then add it to the string buffer
           loc = addToStringBuffer(var1, sbuf);
         } else if (instruction == "gosublabel"){
@@ -112,6 +116,8 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
           symtab->addNewScope();
         } else if(instruction == "pushi"){
           loc = stoi(var1);
+        } else if(instruction == "popscal" || instruction == "pushscal" || instruction == "pusharr" || instruction == "poparr"){
+          loc = symtab->getSymbolTableLocation(var1);
         }
 
         if(loc == -1){
@@ -129,6 +135,12 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
         } 
         var1 = sm3[2];
         var2 = sm3[3];
+        if(1){
+          std::regex re("([a-zA-Z_0-9\\+=\\*/]+)");
+          std::smatch sm;
+          std::regex_search(var1, sm, re);
+          var1 = sm[1];
+        }
         loc = addArrayToBuffer(var1, var2, symtab);
         if(loc == -1){
           std::cerr << "Error adding to buffer... " << std::endl;
@@ -155,25 +167,12 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
   /* Print out the instruction buffer and patch things up */
   std::cout << "=====================" << std::endl;
 
-
-  for(auto& inst: ibuf->instBuffer){
-    if(inst->getInstructionState() == -1){ // if the instruction is not patched up
-      std::string tempLabel = inst->getLabel();
-      if(tempLabel != ""){
-        int loc = symtab->getSymbolTableLocation(tempLabel);
-        inst->setInstructionState(loc);
-      } else {
-        int loc = symtab->getSymbolTableLength();
-        inst->setInstructionState(loc);
-      }
-    }
-  }
-
+  ibuf->patchUpInstructionBuffer(symtab);
 
   ibuf->printInstructionBuffer();
   std::cout << "=====================\n" << std::endl;
 
-  return 0;
+  return writeOutputFile(outfile1,outfile2, ibuf, sbuf);
 }
 
 /* checking if the operation is valid and return the type of vector it belongs too */
@@ -288,15 +287,33 @@ Stmt* Parser::createInstruction(std::string op) {
 }
 
 // write output file
-int Parser::writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf){
-  // First write the binary file for the .out file
-  // for the .out file, we need to print out the string buffer first
-  // then we print out the instruction buffer
+int Parser::writeOutputFile(std::ofstream& outfile1, std::ofstream& outfile2, InstructionBuffer* ibuf, StringBuffer* sbuf){
+  // write to output file 1
+  // print out all the string first
+  // print out all the instruction
 
-  // The second output file is .pout, which is txt file.
-  // for the .pout file, we just need to print the instruction buffer
-  // when we encounter print, we print the corresponding string from the string buffer
-
+  // run through ibuf and write to output file 2
+  for (auto& inst: ibuf->instBuffer) {
+    std::string str = inst->getInstruction();
+    if(inst->getInstructionState() >= 0){
+        if(str == "Prints"){
+            outfile2 << str << " " << inst->getLabel() << "\n";
+        } else if(str == "PrintTOS" || str == "Add" || str == "Div" || 
+        str == "Return" || str == "Exit" || str == "Dup" || 
+        str == "Swap" || str == "Pop" ||
+        str == "Mul" || str == "Negate") {
+            outfile2 << str << " \n";
+        } else if(str == "GoSub" || str == "PopScalar" || str == "PushScalar" ||
+        str == "PushArray" || str == "PopArray" || str == "JumpZero" ||
+        str == "JumpNZero") {
+            outfile2 << str << " " << inst->getLabel() << " " << inst->getInstructionState()  << "\n";
+        } else if(str == "GoSubLabel"){
+            outfile2 << str << " " << inst->getLabel() << "\n";
+        } else{
+            outfile2 << str << " " << inst->getInstructionState() << "\n";
+        }
+    }
+  }
   return 0;
 }
 

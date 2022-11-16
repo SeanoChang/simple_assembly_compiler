@@ -26,13 +26,15 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    std::ofstream outFile(infile+".out", std::ios::out | std::ios::binary);
+    std::ofstream outFile;
+    outFile.open(infile+".out", std::ios::out | std::ios::binary);
     if(!outFile){
         std::cout << "Cannot open .out file" << std::endl;
         exit(1);
     }
 
-    std::ofstream poutFile(infile+".pout", std::ios::out);
+    std::ofstream poutFile;
+    poutFile.open(infile+".pout", std::ios::out);
     if(!poutFile){
         std::cout << "Cannot open .pout file" << std::endl;
         exit(1);
@@ -43,6 +45,9 @@ int main(int argc, char* argv[]){
         std::cerr << "Error in parsing" << std::endl;
         exit(1);
     }
+    
+    outFile.close();
+    poutFile.close();
 
     exit(0);
 }
