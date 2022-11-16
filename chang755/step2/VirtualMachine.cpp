@@ -47,7 +47,23 @@ int VirtualMachine::run(std::ifstream& infile, std::ofstream& outfile){
 
     /* step3 write the result to the output file -- josh */
 
+    //assuming the map is called "map_result"
+
+    std::ofstream outFile;
+    outFile.open(infile+".out", std::ios::out | std::ios::binary);
     
+    if(!outFile){
+        std::cout << "Cannot open .out file" << std::endl;
+        exit(1);
+    }
+
+    for (itr = map_result.begin(); itr != map_result.end(); ++itr)
+    {
+        outFile << (itr -> second);
+    }
+    
+    outFile.close();
+    exit(0);
 
     return 0;
 }
