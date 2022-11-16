@@ -11,6 +11,8 @@ class InstructionMemory {
         ~InstructionMemory() {};
         int addToInstructionMemory(Stmt* stmt, int loc, std::string); /* add instructions to the memory */
         static std::vector<std::unique_ptr<Instruction<Stmt>>> instMemory; /* instruction buffer with smart pointers  */
+    private: 
+        static int pc; /* program counter */
 };
 
 #endif 
