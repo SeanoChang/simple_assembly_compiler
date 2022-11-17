@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Stmt.h"
+#include "StmtOps.h"
 #include "PushOps.h"
 #include "PopOps.h"
 #include "PrintsOps.h"
@@ -24,9 +25,9 @@ class VirtualMachine {
         ~VirtualMachine();
         int run(std::ifstream& infile, std::ofstream& outfile); /* run the virtual machine */
         int readToBuffers(std::ifstream& infile); /* read the input file and put the lines into the buffers */
-        int processInstructions(); /* process the instructions */
-        int writeOutput(std::ofstream& outfile); /* write the output to the output file */
-        Stmt* VirtualMachine::createInstruction(std::string op); /* create the instruction object */
+        void processInstructions(); /* process the instructions */
+        void writeOutput(std::ofstream& outfile); /* write the output to the output file */
+        Stmt* createInstruction(std::string op); /* create the instruction object */
         std::vector<std::string> results; /* result of the virtual machine */
 
     private: 

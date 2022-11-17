@@ -5,7 +5,7 @@
 
 class DataMemory {
     public: 
-        DataMemory(){};
+        DataMemory();
         ~DataMemory(){};
         void push(int val); /* push on the data memory stack */
         void setDataAtLocation(int loc, int val); /* set the data at the location */
@@ -16,6 +16,8 @@ class DataMemory {
         int peek(); /* peek at the top of the stack */
     private: 
         std::vector<std::vector<int>> dataMem;
+        std::vector<int> scopeLengths;
+        int totalLength;
         int scope;
 };
 

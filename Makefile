@@ -7,7 +7,7 @@ HOBJS1 = $(wildcard $(STEP1)*.h)
 STEP2 = chang755/step2/
 SOURCE2 = $(wildcard $(STEP2)*.cpp)
 OBJS2 = 
-HOBJS2 =
+HOBJS2 = $(wildcard $(STEP2)*.h)
 TESTS = $(wildcard testcases/*)
 TESTS2 = $(wildcard results/*.out)
 
@@ -36,11 +36,11 @@ test2: step2
 	@for i in $(TESTS2); do \
 		echo "Testing $$i"; \
 		./step2 $$i; \
-		mv testcases/*.vout step2_results; \
+		mv *.vout step2_results; \
 	done
 
-step2: $(OBJS2) $(HOBJS2)
-	$(CC) $(CFLAGS) $(OBJS2) -o step2
+step2: $(SOURCE2) $(HOBJS2)
+	$(CC) $(CFLAGS) $(SOURCE2) -o step2
 
 .PHONY: clean
 clean: 

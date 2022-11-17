@@ -13,10 +13,8 @@ StringTable::StringTable() {
     strTab.reserve(20);
 }
 
-std::string StringTable::getString() {
-    std::string str = strTab[strTab.size()-1];
-    strTab.pop_back();
-    return str;
+std::string StringTable::getString(int state) {
+    return strTab[state];
 }
 
 int StringTable::addString(std::string str) {

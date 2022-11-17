@@ -7,8 +7,8 @@ int addScalarToSymbolTable(std::string symbol, SymbolTable* symtab) {
     return symtab->addToSymbolTable(symbol, TableEntry(location, 1));
 }
 
-int addLabelToSymbolTable(std::string symbol, int location, SymbolTable* symtab) {
-    return symtab->addToSymbolTable(symbol, TableEntry(location, 0));
+int addLabelsToSymbolTable(std::string symbol, int location, SymbolTable* symtab) {
+    return symtab->addLabelToSymbolTable(symbol, TableEntry(location, 0));
 }
 
 int addToStringBuffer(std::string symbol, StringBuffer* strbfr) {

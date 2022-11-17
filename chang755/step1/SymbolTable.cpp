@@ -34,6 +34,15 @@ SymbolTable* SymbolTable::getSymbolTable() {
     return uniqueSymbol;
 }
 
+int SymbolTable::addLabelToSymbolTable(std::string symbol, TableEntry entry){
+    if(checkSymbolDuplicate(symbol) >= 1){
+        std::cerr << "Error: Duplicate symbol " << symbol << " in the same scope." << std::endl;
+        return -1;
+    }
+    symbolMaps[0][symbol] = entry;
+    return entry.getLocation();
+}
+
 int SymbolTable::addToSymbolTable(std::string symbol, TableEntry entry) {
     if(checkSymbolDuplicate(symbol) >= 1) {
         std::cerr << "Error: Duplicate symbol " << symbol << std::endl;

@@ -10,10 +10,14 @@ PushI push an integer onto the runtime stack.
 #include "RuntimeStack.h"
 
 RuntimeStack::RuntimeStack() {
-    this->runStack.push_back(0);
+    runStack = std::vector<int>();
+    runStack.reserve(5);
 }
 
 void RuntimeStack::push(int val) {
+    if(runStack.size() == runStack.capacity()){
+        runStack.reserve(runStack.capacity() * 2);
+    }
     runStack.push_back(val);
 }
 

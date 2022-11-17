@@ -1,5 +1,5 @@
-#ifndef STMT_OPS_H_
-#define STMT_OPS_H_
+#ifndef PUSH_OPS_H
+#define PUSH_OPS_H
 
 #include "Stmt.h"
 
@@ -38,6 +38,5 @@ class Oppushi: public Stmt{
         static const int opcode;
         static const std::string operation;
 };
-
 
 #endif 

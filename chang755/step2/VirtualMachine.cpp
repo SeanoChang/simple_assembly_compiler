@@ -18,7 +18,7 @@ VirtualMachine::VirtualMachine(){
     dataMem = new DataMemory();
     strTable = new StringTable();
     runStack = new RuntimeStack();
-    std::vector<std::string> results = std::vector<std::string>();
+    results = std::vector<std::string>();
 }
 
 VirtualMachine::~VirtualMachine(){
@@ -29,6 +29,10 @@ VirtualMachine::~VirtualMachine(){
 }
 
 int VirtualMachine::run(std::ifstream& infile, std::ofstream& outfile){
+    if(infile.eof()){
+        std::cerr << "Empty file" << std::endl;
+        return -1;
+    }
     /* step 1 read all the lines and put them into the string buffer or instruction memory */
     readToBuffers(infile);
 
@@ -38,6 +42,13 @@ int VirtualMachine::run(std::ifstream& infile, std::ofstream& outfile){
 
     /* step3 write the result to the output file */
     writeOutput(outfile);
+
+    std::cout << "Virtual Machine terminated successfully" << std::endl;
+    std::cout << "======================================" << std::endl;
+    for(auto& str : results){
+        std::cout << str << std::endl;
+    }
+    std::cout << "======================================" << std::endl;
 
     return 0;
 }
@@ -121,15 +132,15 @@ Stmt* VirtualMachine::createInstruction(std::string op) {
     Stmt* stmt = new Opjump();
     return stmt;
   } 
-  if(op.compare("Jumpzero") == 0){
+  if(op.compare("JumpZero") == 0){
     Stmt* stmt = new Opjumpzero();
     return stmt;
   }
-  if(op.compare("Jumpnzero") == 0){
+  if(op.compare("JumpNZero") == 0){
     Stmt* stmt = new Opjumpnzero();
     return stmt;
   }
-  if(op.compare("Gosub") == 0){
+  if(op.compare("GoSub") == 0){
     Stmt* stmt = new Opgosub();
     return stmt;
   }
@@ -137,7 +148,7 @@ Stmt* VirtualMachine::createInstruction(std::string op) {
   return NULL;
 }
 
-int VirtualMachine::readToBuffer(ifstream& infile){
+int VirtualMachine::readToBuffers(std::ifstream& infile){
     std::string line;
     if(infile.eof()){ // if the file is empty
         return -1;
@@ -148,7 +159,7 @@ int VirtualMachine::readToBuffer(ifstream& infile){
         /* check if the line is a valid operation */
         // first break down the line into opcode and variables
         std::regex re1("([a-zA-Z_0-9\\+=\\*/]+)");
-        std::regex re2("([a-z]+)(\\s[a-zA-Z_0-9])");
+        std::regex re2("([a-zA-Z]+)(\\s[0-9]+)");
         std::smatch sm1;
         std::smatch sm2;
         std::regex_search(line, sm1, re1);
@@ -163,27 +174,38 @@ int VirtualMachine::readToBuffer(ifstream& infile){
         std::string instruction = "";
         int loc = -2; // empty state for the location
 
-        if(num_groups == 1){
+        if(num_groups == 2){
             instruction = sm1[0];
             validStmt = createInstruction(instruction);
             if(validStmt != NULL){
-                instMem->addInstruction(validStmt);
+                instMem->addToInstructionMemory(validStmt, loc);
             } else { // if it is null, then it is a string
                 strTable->addString(sm1[0]);
             }
-        } else if(num_groups == 2){
-            instruction = sm2[0];
-            var1 = sm2[1];
-            int value = stoi(var1);
+        } else if(num_groups == 3){
+            instruction = sm2[1];
+            var1 = sm2[2];
+            // strip off the space in the variable
+            std::regex re("([0-9]+)");
+            std::smatch sm;
+            std::regex_search(var1, sm, re);
+            var1 = sm[1];
+
+            loc = stoi(var1);
             // add to instruction memory
             validStmt = createInstruction(instruction);
+            if(validStmt != NULL){
+                instMem->addToInstructionMemory(validStmt,loc);
+            } else { // if it is null, then it is a string
+                return -1;
+            }
         }
     }
 
     return 0;
 }
 
-int VirtualMachine::processInstructions(){
+void VirtualMachine::processInstructions(){
     std::vector<int> returnAddress = std::vector<int>(); // store the return address
 
     // initialize the program counter
@@ -193,8 +215,11 @@ int VirtualMachine::processInstructions(){
     while(pc < size){
         std::string instruction = instMem->getInstruction(pc);
         int state = instMem->getState(pc);
-        if(isntruction == "Start"){
-            dataMemory.push_back(state);
+
+        if(instruction == "Start"){
+            for(int i = 0; i < state; i++){
+                dataMem->push(-1);
+            }
             pc++;
         } else if(instruction == "Exit"){
             pc++;
@@ -202,84 +227,99 @@ int VirtualMachine::processInstructions(){
             pc = returnAddress.back();
             returnAddress.pop_back();
         } else if(instruction == "Pop"){
-            runStack.pop();
+            runStack->pop();
             pc++;
         } else if(instruction == "Dup"){
-            int top = runStack.peek();
-            runStack.push(top);
+            int top = runStack->peek();
+            runStack->push(top);
             pc++;
         } else if(instruction == "Swap"){
-            int top = runStack.pop();
-            int second = runStack.pop();
-            runStack.push(top);
-            runStack.push(second);
+            int top = runStack->pop();
+            int second = runStack->pop();
+            runStack->push(top);
+            runStack->push(second);
             pc++;
         } else if(instruction == "Add"){
-            int top = runStack.pop();
-            int second = runStack.pop();
-            runStack.push(top + second);
+            int top = runStack->pop();
+            int second = runStack->pop();
+            runStack->push(top + second);
             pc++;
         } else if(instruction == "Negate"){
-            int top = runStack.pop();
-            runStack.push(-top);
+            int top = runStack->pop();
+            runStack->push(-top);
             pc++;
         } else if(instruction == "Mul"){
-            int top = runStack.pop();
-            int second = runStack.pop();
-            runStack.push(top * second);
+            int top = runStack->pop();
+            int second = runStack->pop();
+            runStack->push(top * second);
             pc++;
         } else if(instruction == "Div"){
-            int top = runStack.pop();
-            int second = runStack.pop();
-            runStack.push(second / top);
+            int top = runStack->pop();
+            int second = runStack->pop();
+            runStack->push(second / top);
             pc++;
         } else if(instruction == "PushScalar"){
-            int top = runStack.pop();
-            dataMem.setDataAtLocation(state, top);
+            runStack->push(dataMem->getDataAtLocation(state));
             pc++;
         } else if(instruction == "PushArray"){
-
+            int top = runStack->pop();
+            top += state; // the location of data memory
+            int value = dataMem->getDataAtLocation(top);
+            runStack->push(value); // push the value to the run stack
             pc++;
         } else if(instruction == "PopScalar"){
-            int top = dataMem.getDataAtLocation(state);
-            runStack.push(top);
+            int top = runStack->pop();
+            dataMem->setDataAtLocation(state, top);
             pc++;
         } else if(instruction == "PopArray"){
+            int top = runStack->pop();
+            top += state;
+            int value = runStack->pop();
+            dataMem->setDataAtLocation(top, value);
             pc++;
         } else if(instruction == "PushI"){
-            runStack.push(state);
+            runStack->push(state);
             pc++;
         } else if(instruction == "GoSubLabel"){
-            dataMem.addNewScope(); // initialize a new scope with state size??
+            dataMem->addNewScope(); // initialize a new scope with state size??
+            for(int i = 0; i < state; i++){
+                dataMem->push(-1);
+            }
             pc++;
         } else if(instruction == "Jump"){
             pc = state;
-        } else if(instruction == "Jumpzero"){
-            int top = runStack.pop();
+        } else if(instruction == "JumpZero"){
+            int top = runStack->pop();
             if(top == 0){
                 pc = state;
             } else {
                 pc++;
             }
-        } else if(instruction == "Jumpnzero"){
-            int top = runStack.pop();
+        } else if(instruction == "JumpNZero"){
+            int top = runStack->pop();
             if(top != 0){
                 pc = state;
             } else {
                 pc++;
             }
         } else if(instruction == "GoSub"){ // enter sub routine push value to return address
+            returnAddress.push_back(pc+1); // return to the instruction after the GoSub
             pc = state;
-            returnAddress.push_back(pc-1); // return to the instruction prior to the goSubLabel
         } else if(instruction == "Prints"){
             results.push_back(strTable->getString(state));
             pc++;
         } else if(instruction == "PrintTOS"){ // print from top of the stack
-            results.push_back(std::to_string(dataMem->pop()));
+            results.push_back(std::to_string(runStack->pop()));
             pc++;
         } else if(instruction == "Return") {
             pc = returnAddress.back();
             returnAddress.pop_back();
         }
+    }
+}
+
+void VirtualMachine::writeOutput(std::ofstream& outfile){
+    for(auto& result : results){
+        outfile << result << std::endl;
     }
 }

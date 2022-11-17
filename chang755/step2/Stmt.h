@@ -43,6 +43,7 @@ class Stmt {
         Stmt() {};
         virtual ~Stmt() = 0;
         virtual int getOpcode() = 0;
+        virtual std::string getOperation() = 0;
     private: 
         static const int opcode;
 };

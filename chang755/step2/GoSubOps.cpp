@@ -2,15 +2,26 @@
 
 #include "GoSubOps.h"
 
-class Opgosub: public Stmt{   
-    public: 
-        Opgosub() {};
-        ~Opgosub() {};
-        int getOpcode();
-        std::string getOperation();
-        
-    private:
-        static const int opcode;
-        static const std::string operation;
-};
+/* op gosub */
+const int Opgosub::opcode = OP_GOSUB;
+const std::string Opgosub::operation= "GoSub";
 
+int Opgosub::getOpcode(){
+    return opcode;  
+}
+
+std::string Opgosub::getOperation(){
+    return operation;
+}
+
+/* op gosublabel */
+const int Opgosublabel::opcode = OP_ENTER_SUBROUTINE;
+const std::string Opgosublabel::operation= "GoSubLabel";
+
+int Opgosublabel::getOpcode(){
+    return opcode;  
+}
+
+std::string Opgosublabel::getOperation(){
+    return operation;
+}

@@ -76,7 +76,6 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
           end = "end";
         } else if(sm1[1] == "return"){
           // after returning from the subroutine, we need to pop off the varaibles declared in the subroutine
-          // symtab->popVariables();
           // pop off the stack of scope from the symbol table
           goSubLabel = symtab->popScope();
         }
@@ -103,14 +102,15 @@ int Parser::parse(std::ifstream& infile, std::ofstream& outfile1, std::ofstream&
         // if the operation is declaring a symbol, then add it to the symbol table
         if(instruction == "label"){
           int location = ibuf->getInstructionBufferSize();
-          loc = addLabelToSymbolTable(var1, location,  symtab);
+          loc = addLabelsToSymbolTable(var1, location,  symtab);
         } else if(instruction == "declscal"){
           loc = addScalarToSymbolTable(var1, symtab);
         } else if (instruction == "prints"){
           // if the operation is printing a string, then add it to the string buffer
           loc = addToStringBuffer(var1, sbuf);
         } else if (instruction == "gosublabel"){
-          loc = addLabelToSymbolTable(var1, -2, symtab);
+          int location = ibuf->getInstructionBufferSize();
+          addLabelsToSymbolTable(var1, location, symtab);
           // now entering the subroutine
           // add a new scope to the symbol table
           symtab->addNewScope();

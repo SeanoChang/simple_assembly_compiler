@@ -7,9 +7,9 @@
 class StringTable {
     public: 
         StringTable();
-        ~StringTable();
+        ~StringTable() {};
         int addString(std::string str); /* add the string to string table */
-        std::string getString(); /* pop off the string from the string table  */
+        std::string getString(int loc); /* pop off the string from the string table  */
 
     private: 
         static std::vector<std::string> strTab;

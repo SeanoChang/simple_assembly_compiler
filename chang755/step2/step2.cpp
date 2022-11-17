@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
     //     std::cout << "Cannot open .out file" << std::endl;
     //     exit(1);
     // }
-    std::regex re("([0-9a-zA-Z_]+)");
+    std::regex re("([0-9a-zA-Z_]+)/([0-9a-zA-Z_]+).([0-9a-zA-Z_]+)");
     std::smatch sm;
     std::regex_search(infile,sm,re);
-    std::string voutfile = sm[1];
+    std::string voutfile = sm[2];
 
     std::ofstream voutFile(voutfile+".vout",  std::ios::out);
     if(!voutFile){
@@ -47,9 +47,12 @@ int main(int argc, char* argv[]) {
     
     VirtualMachine vm = VirtualMachine();
     if(vm.run(inFile, voutFile) == -1){
-        std::cerr << "Error in running" << std::endl;
+        std::cerr << "Error in running of the file is empty." << std::endl;
         exit(1);
     }
+
+    inFile.close();
+    voutFile.close();
 
     exit(0);
 

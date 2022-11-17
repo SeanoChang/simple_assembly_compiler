@@ -5,7 +5,7 @@
 
 class RuntimeStack {
     public: 
-        RuntimeStack() {};
+        RuntimeStack() ;
         ~RuntimeStack() {};
         void push(int val); /* push the value up to runtime stack */
         int pop(); /* pop the value off the runtime stack  */

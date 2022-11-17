@@ -12,8 +12,6 @@ InstructionMemory::InstructionMemory(){
     instMemory.reserve(20);
 }
 
-InstructionMemory::~InstructionMemory() {}
-
 std::string InstructionMemory::getInstruction(int loc) {
     return instMemory[loc]->getInstruction();
 }
@@ -22,12 +20,16 @@ int InstructionMemory::getState(int loc) {
     return instMemory[loc]->getInstructionState();
 }
 
-int InstructionMemory::addToInstructionMemory(Stmt* stmt, int loc, std::string label) {
+int InstructionMemory::getSize() {
+    return instMemory.size();
+}
+
+void InstructionMemory::addToInstructionMemory(Stmt* stmt, int loc) {
     if(stmt->getOpcode() != 0) {
         if(instMemory.size() == instMemory.capacity()){
             instMemory.reserve(instMemory.capacity() * 2);
         }
-        instMemory.push_back(Make_unique<Instruction<Stmt>>(stmt, loc, label));
+        instMemory.push_back(Make_unique<Instruction<Stmt>>(stmt, loc));
     }
 }
 

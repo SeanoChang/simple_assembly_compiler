@@ -42,7 +42,7 @@ void InstructionBuffer::patchUpInstructionBuffer(SymbolTable* symtab, int goSubL
                 inst->setInstructionState(symtab->getSymbolTableLength());
             } else if(str == "GoSubLabel"){
                 inst->setInstructionState(goSubLabel);
-            } else if(str == "GoSub" || str == "Jump"){ // patching GoSub with the label and location of the label 
+            } else if(str == "GoSub" || str == "Jump"  || str == "JumpZero" || str == "JumpNZero"){ // patching GoSub with the label and location of the label 
                 inst->setInstructionState(symtab->getSymbolTableLocation(inst->getLabel()));
             } else if(str == "Mul" || str == "Div" || str == "Add" || str == "Dup" ||
              str == "Swap" || str == "Pop" || str == "Push" || str == "PrintTOS" || str == "Return"

@@ -14,6 +14,7 @@ class SymbolTable{
     public:
         ~SymbolTable();
         static SymbolTable* getSymbolTable();
+        int addLabelToSymbolTable(std::string symbol, TableEntry entry);
         int addToSymbolTable(std::string symbol, TableEntry entry);
         TableEntry getTableEntry(std::string symbol); 
         int getSymbolTableLocation(std::string symbol);

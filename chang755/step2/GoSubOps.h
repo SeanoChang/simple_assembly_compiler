@@ -15,4 +15,16 @@ class Opgosub: public Stmt{
         static const std::string operation;
 };
 
+class Opgosublabel: public Stmt{   
+    public: 
+        Opgosublabel() {};
+        ~Opgosublabel() {};
+        int getOpcode();
+        std::string getOperation();
+        
+    private:
+        static const int opcode;
+        static const std::string operation;
+};
+
 #endif 

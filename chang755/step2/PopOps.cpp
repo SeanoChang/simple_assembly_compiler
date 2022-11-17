@@ -25,3 +25,15 @@ int Oppoparray::getOpcode(){
 std::string Oppoparray::getOperation(){
     return operation;
 }
+
+/* op pop */
+const int Oppop::opcode = OP_POP;
+const std::string Oppop::operation= "Pop";
+
+int Oppop::getOpcode(){
+    return opcode;  
+}
+
+std::string Oppop::getOperation(){
+    return operation;
+}
