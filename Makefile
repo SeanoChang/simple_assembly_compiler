@@ -13,7 +13,7 @@ TESTS2 = $(wildcard results/*.out)
 
 VALGRIND = valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose
 
-all: clean step1 step2 
+all: clean test1 test2
 
 .PHONY: test1
 test1: clean step1
@@ -45,4 +45,4 @@ step2: $(SOURCE2) $(HOBJS2)
 .PHONY: clean
 clean: 
 	rm -f $(OBJS1) $(OBJS2) step1 step2 
-	rm -rf results
+	rm -rf results step2_results
